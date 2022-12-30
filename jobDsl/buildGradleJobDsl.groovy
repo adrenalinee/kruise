@@ -1,6 +1,6 @@
 
 
-pipelineJob(${projectName}) {
+pipelineJob("${projectName}.build.gradle") {
     parameters {
         stringParam {
             name("projectName")
@@ -13,10 +13,9 @@ pipelineJob(${projectName}) {
             scm {
                 git {
                     remote {
-                        url()
-                        credentials()
+                        url(frodoRepositoryUrl)
                     }
-                    branch("master")
+                    branch(frodoBranch)
                     scriptPath("jenkinsfile/build-gradle.Jenkinsfile.groovy")
                 }
             }
