@@ -1,0 +1,54 @@
+agent:
+  enabled: true
+  command: jenkins-agent
+  idleMinutes: 60
+  containerCap: 10
+  resources:
+    limits:
+      cpu:
+      memory:
+controller:
+  sidecars:
+    configAutoReload:
+      enabled: false
+  installPlugins:
+    - workflow-aggregator
+    - ldap
+    - job-dsl
+    - xml-job-to-job-dsl
+    - github
+    - kubernetes
+    - git
+    - configuration-as-code
+    - pipeline-stage-view
+    - remote-file
+    - http_request
+    - matrix-auth
+    - nested-view
+    - pipeline-utility-steps
+    - github-oauth
+    - ws-cleanup
+    - kubernetes-cli
+    - authorize-project
+    - build-user-vars-plugin
+  JCasC:
+    configScripts:
+      authorization: |-
+        security:
+          scriptApproval:
+            approvedSignatures:
+            - method groovy.lang.GroovyObject getProperty java.lang.String
+            - method groovy.lang.GroovyObject invokeMethod java.lang.String java.lang.Object
+          queueItemAuthenticator:
+            authenticators:
+            - global:
+                strategy: triggeringUsersAuthorizationStrategy
+        jenkins:
+          authorizationStrategy:
+            globalMatrix:
+              permissions:
+              - "USER:Job/Read:anonymous"
+              - "USER:Overall/Read:anonymous"
+              - "USER:View/Read:anonymous"
+              - "GROUP:Overnall/Administer:authenticated"
+
