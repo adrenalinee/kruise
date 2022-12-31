@@ -33,9 +33,9 @@ podTemplate(
         }
 
         stage("Build") {
-            container("jdk" {
+            container("jdk") {
                 sh("./gradlew --build-cache build")
-            })
+            }
         }
     }
 }
