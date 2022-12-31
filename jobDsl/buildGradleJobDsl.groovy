@@ -7,6 +7,16 @@ pipelineJob("${projectName}.build.gradle") {
             defaultValue(projectName)
             trim(true)
         }
+        stringParam {
+            name("repositoryUrl")
+            defaultValue(repositoryUrl)
+            trim(true)
+        }
+        stringParam {
+            name("branch")
+            defaultValue(branch)
+            trim(true)
+        }
     }
     definition {
         cpsScm {
