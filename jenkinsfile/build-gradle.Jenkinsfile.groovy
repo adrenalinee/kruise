@@ -11,13 +11,13 @@ podTemplate(
     containers:[
         containerTemplate(
             name: "jdk",
-            image: "",
+            image: "eclipse-temurin:17.0.5_8-jdk-alpine",
             command: "sleep",
             args: "infinity"
         ),
         containerTemplate(
             name: "podman",
-            image: "",
+            image: "quay.io/podman/stable:v4.3.1",
             privileged: true,
             command: "sleep",
             args: "infinity"
