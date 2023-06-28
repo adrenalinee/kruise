@@ -57,7 +57,7 @@ controller:
               job("frodo-build-gradle-seed-job") {
                 description("frodo 를 위한 job 을 생성해주는 seed job 입니다.")
                 parameters {
-                  credentialsParams("credential") {
+                  credentialsParam("credential") {
                     type("com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl")
                     description("빌드 스크립트를 다운받을때 사용할 인증 token 을 지정하세요.")
                   }
