@@ -10,7 +10,7 @@ agent:
 controller:
   sidecars:
     configAutoReload:
-      enabled: false
+      enabled: true
   installPlugins:
     - workflow-aggregator
     - ldap
@@ -57,29 +57,29 @@ controller:
               job("frodo-build-gradle-seed-job") {
                 description("frodo 를 위한 job 을 생성해주는 seed job 입니다.")
                 parameters {
-                  credentialsParam("credential") {
+                  credentialsParam("frodoCredential") {
                     type("com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl")
                     description("빌드 스크립트를 다운받을때 사용할 인증 token 을 지정하세요.")
                   }
                   stringParam {
-                    name("repositoryUrl")
+                    name("frodoRepositoryUrl")
                     defaultValue("https://github.com/adrenalinee/frodo.git")
                     description("빌드 스크립트를 가져올 git 주소입니다.")
                     trim(true)
                   }
                   stringParam {
-                    name("branch")
-                    defaultValue("develop")
+                    name("frodoBranch")
+                    defaultValue("master")
                     description("빌드 스크립트를 가져올 branch 입니다.")
                     trim(true)
                   }
                 }
                 scm {
                   git {
-                    branch(branch)
+                    branch('$frodoBranch')
                     remote {
-                      credentials(credential)
-                      url(repositoryUrl)
+                      credentials('$frodoCredential')
+                      url('$frodoRepositoryUrl')
                     }
                   }
                 }

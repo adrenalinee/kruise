@@ -1,20 +1,18 @@
-
-
-pipelineJob("${projectName}.build.gradle") {
+pipelineJob("build-gradle") {
     parameters {
         stringParam {
             name("projectName")
-            defaultValue(projectName)
+            defaultValue("hello-world")
             trim(true)
         }
         stringParam {
             name("repositoryUrl")
-            defaultValue(repositoryUrl)
+            defaultValue("https://github.com/adrenalinee/hello-world-kotlin.git")
             trim(true)
         }
         stringParam {
             name("branch")
-            defaultValue(branch)
+            defaultValue("develop")
             trim(true)
         }
     }
@@ -24,9 +22,10 @@ pipelineJob("${projectName}.build.gradle") {
                 git {
                     remote {
                         url(frodoRepositoryUrl)
+                        credentials(frodoCredential)
                     }
                     branch(frodoBranch)
-                    scriptPath("jenkinsfile/build-gradle.Jenkinsfile.groovy")
+                    scriptPath("jenkinsfile/build-gradle.Jenkinsfile")
                 }
             }
         }
