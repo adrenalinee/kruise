@@ -1,4 +1,4 @@
-pipelineJob("build-gradle") {
+pipelineJob("frodo-build-gradle") {
     parameters {
         stringParam {
             name("projectName")
@@ -14,6 +14,11 @@ pipelineJob("build-gradle") {
             name("branch")
             defaultValue("develop")
             trim(true)
+        }
+        choiceParam {
+            name("jdkVersion")
+            choices(["17", "20"])
+            description("build 를 진행할 jdk의 버전을 지정합니다.")
         }
     }
     definition {
