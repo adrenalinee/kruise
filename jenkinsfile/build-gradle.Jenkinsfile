@@ -38,7 +38,7 @@ podTemplate(
         )
     ]
 ) {
-    node("build-gradle-jdk") {
+    node("build-gradle-jdk${jdkVersion}") {
         stage("Checkout") {
             git(
                 url: repositoryUrl,
