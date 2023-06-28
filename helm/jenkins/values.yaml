@@ -50,5 +50,5 @@ controller:
               - "USER:Job/Read:anonymous"
               - "USER:Overall/Read:anonymous"
               - "USER:View/Read:anonymous"
-              - "GROUP:Overnall/Administer:authenticated"
+              - "GROUP:Overall/Administer:authenticated"
 
