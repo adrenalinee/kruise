@@ -36,7 +36,7 @@ pipelineJob("frodo-build-gradle") {
         }
     }
     properties {
-        disableConcurrentBuilds()
+//        disableConcurrentBuilds()
     }
     logRotator {
         numToKeep(30)
