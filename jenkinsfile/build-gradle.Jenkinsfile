@@ -1,4 +1,4 @@
-final String podmanImage = "quay.io/podman/stable:v4.5.1"
+// final String podmanImage = "quay.io/podman/stable:v4.5.1"
 final String jdk17Image = "docker.io/eclipse-temurin:17.0.7_7-jdk"
 final String jdk20Image = "docker.io/eclipse-temurin:20.0.1_9-jdk"
 final Integer idleMinutes = 60
@@ -20,7 +20,7 @@ podTemplate(
     name: "build-gradle-jdk${jdkVersion}",
     label: "build-gradle-jdk${jdkVersion}",
     nodeUsageMode: "EXCLUSIVE", // label 이 일치하는 job 에서만 사용됨.
-    idleMinutes: idleMinutes, //대기시간(대시시간동안 job 실행가능.
+    idleMinutes: idleMinutes, //대기시간(대시시간동안 다른 job 실행가능).
     instanceCap: instanceCap, //최대 생성가능한 동일 스팩 팟 갯수.
     containers:[
         containerTemplate(
@@ -29,13 +29,13 @@ podTemplate(
             command: "sleep",
             args: "infinity"
         ),
-        containerTemplate(
-            name: "podman",
-            image: podmanImage,
-            privileged: true,
-            command: "sleep",
-            args: "infinity"
-        )
+//         containerTemplate(
+//             name: "podman",
+//             image: podmanImage,
+//             privileged: true,
+//             command: "sleep",
+//             args: "infinity"
+//         )
     ]
 ) {
     node("build-gradle-jdk${jdkVersion}") {
@@ -48,7 +48,7 @@ podTemplate(
 
         stage("Build") {
             container("jdk") {
-                sh("./gradlew --build-cache build")
+                sh("./gradlew build")
             }
         }
     }

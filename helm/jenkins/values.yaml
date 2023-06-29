@@ -52,10 +52,25 @@ controller:
               - "USER:View/Read:anonymous"
               - "GROUP:Overall/Administer:authenticated"
       seed-jobs: |-
+        jenkins:
+          views:
+            - all:
+                name: "all"
+            - list:
+                columns:
+                  - "status"
+                  - "weather"
+                  - "jobName"
+                  - "lastSuccess"
+                  - "lastFailure"
+                  - "lastDuration"
+                  - "buildButton"
+                includeRegex: "frodo-seed-job-.*"
+                name: "frodo-seed"
         jobs:
           - script: >
-              job("frodo-build-gradle-seed-job") {
-                description("frodo 를 위한 job 을 생성해주는 seed job 입니다.")
+              job("frodo-seed-job-build-gradle") {
+                description("frodo 를 위한 build job 을 생성해주는 seed job 입니다.")
                 parameters {
                   credentialsParam("frodoCredential") {
                     type("com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl")
@@ -85,7 +100,10 @@ controller:
                 }
                 steps {
                   jobDsl {
-                    targets("jobDsl/createBuildGradleJobDsl.groovy")
+                    targets(
+                      "jobDsl/createBuildGradleJobDsl.groovy\n" +
+                      "jobDsl/createBuildGradlePushImageJobDsl.groovy\n" +
+                    )
                     sandbox(true)
                   }
                 }
