@@ -18,7 +18,7 @@ if (jdkVersion == 17) {
 
 podTemplate(
     name: "frodo-jenkins-build-gradle-jdk${jdkVersion}",
-    label: "frodo-jenkins-gradle-jdk${jdkVersion}",
+    label: "frodo-jenkins-build-gradle-jdk${jdkVersion}",
     nodeUsageMode: "EXCLUSIVE", // label 이 일치하는 job 에서만 사용됨.
     idleMinutes: idleMinutes, //대기시간(대시시간동안 다른 job 실행가능).
     instanceCap: instanceCap, //최대 생성가능한 동일 스팩 팟 갯수.
