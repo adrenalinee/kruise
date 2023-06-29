@@ -1,5 +1,10 @@
 pipelineJob("frodo-build-gradle-push-image") {
     parameters {
+        credentialsParam("imageRegistryCredential") {
+            type("com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl")
+            description("image registry 에 접근하기 위한 credential 입니다.")
+            required(true)
+        }
         stringParam {
             name("projectName")
             defaultValue("hello-world")
