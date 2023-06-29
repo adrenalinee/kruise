@@ -1,8 +1,10 @@
 agent:
-  enabled: true
-  command: jenkins-agent
-  idleMinutes: 60
-  containerCap: 10
+  enabled: true ## default agent 사용
+  podName: frodo-jenkins-default
+  nodeUsageMode: NORMAL
+#  command: jenkins-agent
+  idleMinutes: 60 ## job 실행용 pod 대기 시간(대기시간중에 잡 실행가능)
+  containerCap: 10 ## 한클러스터에서 동시에 실행가능한 최대 job 갯수
   resources:
     limits:
       cpu:
