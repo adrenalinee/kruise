@@ -52,24 +52,9 @@ controller:
               - "USER:View/Read:anonymous"
               - "GROUP:Overall/Administer:authenticated"
       seed-jobs: |-
-        jenkins:
-          views:
-            - all:
-                name: "all"
-            - list:
-                columns:
-                  - "status"
-                  - "weather"
-                  - "jobName"
-                  - "lastSuccess"
-                  - "lastFailure"
-                  - "lastDuration"
-                  - "buildButton"
-                includeRegex: "frodo-seed-job-.*"
-                name: "frodo-seed"
         jobs:
           - script: >
-              job("frodo-seed-job-build-gradle") {
+              job("frodo-seed-job") {
                 description("frodo 를 위한 build job 을 생성해주는 seed job 입니다.")
                 parameters {
                   credentialsParam("frodoCredential") {
@@ -102,7 +87,7 @@ controller:
                   jobDsl {
                     targets(
                       "jobDsl/createBuildGradleJobDsl.groovy\n" +
-                      "jobDsl/createBuildGradlePushImageJobDsl.groovy\n" +
+                      "jobDsl/createBuildGradlePushImageJobDsl.groovy"
                     )
                     sandbox(true)
                   }
