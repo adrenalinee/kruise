@@ -1,4 +1,4 @@
-pipelineJob("frodo-build-gradle") {
+pipelineJob("frodo-build-gradle-push-image") {
     parameters {
         stringParam {
             name("projectName")
