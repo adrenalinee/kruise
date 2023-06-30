@@ -36,7 +36,7 @@ pipelineJob("frodo-deploy-k8s-kubectl") {
                         credentials(frodoCredential)
                     }
                     branch(frodoBranch)
-                    scriptPath("jenkinsfile/build-gradle.Jenkinsfile")
+                    scriptPath("jenkinsfile/deploy-k8s-kubectl.Jenkinsfile")
                 }
             }
         }
