@@ -31,7 +31,9 @@ podTemplate(
         stage("Deploy") {
             container("kubectl") {
                 sh("kubectl version")
-                sh("kubectl kustomize ./base")
+                dir("kustomize") {
+                    sh("kubectl kustomize ./base")
+                }
             }
         }
     }
