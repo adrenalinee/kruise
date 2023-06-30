@@ -89,7 +89,8 @@ controller:
                   jobDsl {
                     targets(
                       "jobDsl/createBuildGradleJobDsl.groovy\n" +
-                      "jobDsl/createBuildGradlePushImageJobDsl.groovy"
+                      "jobDsl/createBuildGradlePushImageJobDsl.groovy\n" +
+                      "jobDsl/createDeployK8s.groovy"
                     )
                     sandbox(true)
                   }

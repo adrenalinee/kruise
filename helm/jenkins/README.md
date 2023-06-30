@@ -5,5 +5,5 @@
 
 
 ```shell
-helm upgrade -i -f values.yaml -n jenkins jenkins jenkins/jenkins
+helm upgrade -i -f values.yaml -n jenkins --verson 4.3.29 jenkins jenkins/jenkins
 ```
