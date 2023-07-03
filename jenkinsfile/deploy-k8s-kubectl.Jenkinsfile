@@ -2,8 +2,10 @@ final String kubectlImage = "docker.io/jitesoft/kubectl:v1.27.3"
 final Integer idleMinutes = 60
 final Integer instanceCap = 5
 
-String repositoryUrl = params.repositoryUrl
-String branch = params.branch
+final String projectName = params.projectName
+final String repositoryUrl = params.repositoryUrl
+final String branch = params.branch
+final def kubeconfigFile = params.kubeconfigFile //secretFile
 
 podTemplate(
     name: "frodo-jenkins-deploy-k8s-kubectl",
@@ -33,7 +35,12 @@ podTemplate(
                 sh("kubectl version --output=yaml")
                 dir("kustomize") {
 //                     sh("kubectl kustomize ./base")
-                    sh("kubectl apply -k ./base")
+
+                    withKubeConfig([
+                        credentialsId: kubeconfigFile
+                    ]) {
+                        sh("kubectl --kubeconfig $KUBECONFIG apply --kustomize .")
+                    }
                 }
             }
         }
