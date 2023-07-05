@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "frodo-spring-boot.fullname" . }}
+  labels:
+    {{- include "frodo-spring-boot.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "frodo-spring-boot.selectorLabels" . | nindent 4 }}

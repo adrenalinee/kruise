@@ -34,7 +34,7 @@ podTemplate(
             container("kubectl") {
                 sh("kubectl version --output=yaml")
                 dir("kustomize") {
-//                     sh("kubectl kustomize ./base")
+                    sh("kustomize edit set image hello-world=$imagePath:$imageTag")
 
                     withKubeConfig([
                         credentialsId: kubeconfigFile
