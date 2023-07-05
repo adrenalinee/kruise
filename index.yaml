@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  frodo-spring-boot:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2023-07-05T21:54:12.843794+09:00"
+    description: A Helm chart for Kubernetes
+    digest: f83ef0263ecbcd35e114f6b1b12efe5a8819b373ec9085e7f414a11f8f9d0b94
+    name: frodo-spring-boot
+    type: application
+    urls:
+    - packages/frodo-spring-boot-0.1.0.tgz
+    version: 0.1.0
+generated: "2023-07-05T21:54:12.843044+09:00"
