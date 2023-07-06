@@ -5,5 +5,5 @@
 
 
 ```shell
-helm upgrade --istall --create-namespace -f values.yaml -n jenkins jenkins jenkins/jenkins --version 4.3.29 
+helm upgrade --install --create-namespace -f values.yaml -n jenkins jenkins jenkins/jenkins --version 4.3.29 
 ```
