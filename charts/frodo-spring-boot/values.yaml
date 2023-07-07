@@ -86,7 +86,7 @@ serviceMonitor:
   ## https://github.com/coreos/prometheus-operator
   ##
   enabled: false
-  path: /metrics
+  path: /actuator/prometheus
   #  namespace: monitoring  (defaults to use the namespace this chart is deployed to)
   labels: {}
   interval: 10s
