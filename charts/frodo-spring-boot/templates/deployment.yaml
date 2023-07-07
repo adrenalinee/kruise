@@ -38,7 +38,7 @@ spec:
             - name: SPRING_PROFILES_ACTIVE
               value: {{ .Values.spring.activeProfiles }}
             {{- with .Values.env }}
-              {{- toYaml . | indent 12 }}
+              {{ (tpl (toYaml .) .) | indent 12 }}
             {{- end }}
           ports:
             - name: http
