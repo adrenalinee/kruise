@@ -1,7 +1,7 @@
 apiVersion: v2
 name: frodo-spring-boot
 description: A Helm chart for Kubernetes
-
+icon: https://spring.io/img/logos/spring-initializr.svg
 # A chart can be either an 'application' or a 'library' chart.
 #
 # Application charts are a collection of templates that can be packaged into versioned archives

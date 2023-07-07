@@ -1,0 +1,44 @@
+{{- if .Values.serviceMonitor.enabled }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "frodo-spring-boot.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "frodo-spring-boot.labels" . | nindent 4 }}
+    {{- with .Values.serviceMonitor.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  endpoints:
+    - port: {{ .Values.service.portName }}
+    {{- with .Values.serviceMonitor.interval }}
+      interval: {{ . }}
+    {{- end }}
+    {{- with .Values.serviceMonitor.scrapeTimeout }}
+      scrapeTimeout: {{ . }}
+    {{- end }}
+      honorLabels: true
+      path: {{ .Values.serviceMonitor.path }}
+      scheme: {{ .Values.serviceMonitor.scheme }}
+    {{- with .Values.serviceMonitor.tlsConfig }}
+      tlsConfig:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.serviceMonitor.relabelings }}
+      relabelings:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+  jobLabel: "{{ .Release.Name }}"
+  selector:
+    matchLabels:
+      {{- include "frodo-spring-boot.selectorLabels" . | nindent 6 }}
+  namespaceSelector:
+    matchNames:
+      - {{ include "grafana.namespace" . }}
+  {{- with .Values.serviceMonitor.targetLabels }}
+  targetLabels:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}
