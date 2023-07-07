@@ -3,6 +3,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "frodo-spring-boot.fullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "frodo-spring-boot.labels" . | nindent 4 }}
 spec:
