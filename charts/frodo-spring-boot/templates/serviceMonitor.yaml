@@ -12,7 +12,7 @@ metadata:
     {{- end }}
 spec:
   endpoints:
-    - port: {{ .Values.service.portName }}
+    - port: http
     {{- with .Values.serviceMonitor.interval }}
       interval: {{ . }}
     {{- end }}
@@ -36,7 +36,7 @@ spec:
       {{- include "frodo-spring-boot.selectorLabels" . | nindent 6 }}
   namespaceSelector:
     matchNames:
-      - {{ include "grafana.namespace" . }}
+      - {{ .Release.Namespace }}
   {{- with .Values.serviceMonitor.targetLabels }}
   targetLabels:
     {{- toYaml . | nindent 4 }}
