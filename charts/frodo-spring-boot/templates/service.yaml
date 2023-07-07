@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "frodo-spring-boot.fullname" . }}
+  name: {{ include "frodo-spring-boot.name" . }}
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "frodo-spring-boot.labels" . | nindent 4 }}

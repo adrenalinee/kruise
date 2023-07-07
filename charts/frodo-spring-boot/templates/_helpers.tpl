@@ -6,15 +6,6 @@ Expand the name of the chart.
 {{- end }}
 
 {{/*
-Create a default fully qualified app name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-If release name contains chart name it will be used as a full name.
-*/}}
-{{- define "frodo-spring-boot.fullname" -}}
-{{- printf "%s-%s" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
-{{- end }}
-
-{{/*
 Create chart name and version as used by the chart label.
 */}}
 {{- define "frodo-spring-boot.chart" -}}
@@ -43,7 +34,7 @@ Create the name of the service account to use
 */}}
 {{- define "frodo-spring-boot.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "frodo-spring-boot.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "frodo-spring-boot.name" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
