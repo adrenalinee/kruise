@@ -23,9 +23,6 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
-# Environment variables to pass to Deployments
-env: []
-
 podAnnotations: {}
 
 podSecurityContext: {}
@@ -98,6 +95,10 @@ serviceMonitor:
   scrapeTimeout: 30s
   relabelings: []
   targetLabels: []
+
+# Environment variables to pass to Deployments
+containerEnv:
+# name: value
 
 spring:
   activeProfiles: ""
