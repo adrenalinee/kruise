@@ -1,6 +1,6 @@
 agent:
   enabled: true ## default agent 사용
-  podName: frodo-jenkins-default
+  podName: jenkins-agent-default
   nodeUsageMode: NORMAL
 #  command: jenkins-agent
   idleMinutes: 60 ## job 실행용 pod 대기 시간(대기시간중에 잡 실행가능)
