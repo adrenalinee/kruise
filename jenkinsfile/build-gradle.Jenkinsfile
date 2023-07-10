@@ -16,6 +16,9 @@ if (jdkVersion == 17) {
     selectedJdkImage = jdk20Image
 }
 
+println("[FRODO] gradle build start !! -------")
+println("[FRODO] job parameters: ${params}")
+
 podTemplate(
     name: "frodo-jenkins-build-gradle-jdk${jdkVersion}",
     label: "frodo-jenkins-build-gradle-jdk${jdkVersion}",
