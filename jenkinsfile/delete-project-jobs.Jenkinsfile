@@ -21,7 +21,7 @@ podTemplate(
         stage("disableProjectJobs") {
             Jenkins.instance.items
                 .findAll { job -> job.name =~ "${projectName}-.*" }
-                .each { job -> job.disable() }
+                .each { job -> job.setDisable(true) }
         }
     }
 }

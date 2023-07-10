@@ -49,7 +49,7 @@ controller:
             - method hudson.model.ItemGroup getItems
             - method hudson.model.ViewGroup deleteView hudson.model.View
             - method hudson.model.ViewGroup getView java.lang.String
-            - staticMethod hudson.model.Hudson getInstance
+            - staticMethod jenkins.model.Jenkins getInstance
           queueItemAuthenticator:
             authenticators:
             - global:
