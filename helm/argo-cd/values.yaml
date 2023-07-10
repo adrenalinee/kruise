@@ -1,3 +1,7 @@
 configs:
+  rbac:
+    policy.default: role:readonly
+  cm:
+    users.anonymous.enabled: true
   params:
     server.insecure: true
