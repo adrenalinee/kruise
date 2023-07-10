@@ -31,18 +31,20 @@ pipelineJob("${projectName}-${projectRepositoryBranch}-build-gradle-push-image")
         stringParam {
             name("repositoryUrl")
             defaultValue(projectRepositoryUrl)
+            description("빌드를 수행할 프로젝트의 git 저장소 주소입니다.")
             trim(true)
         }
         stringParam {
             name("branch")
             defaultValue(projectRepositoryBranch)
+            description("빌드를 수행할 branch 입니다.")
             trim(true)
         }
-        choiceParam {
+        stringParam {
             name("jdkVersion")
-            choices(["17", "20"])
             defaultValue(jdkVersion)
-            description("build 를 진행할 jdk의 버전을 지정합니다.")
+            description("build 를 진행할 jdk의 버전을 지정합니다. 17, 20 중에 선택")
+            trim(true)
         }
         stringParam {
             name("imagePath")
