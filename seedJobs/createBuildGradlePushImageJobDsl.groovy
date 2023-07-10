@@ -59,7 +59,7 @@ pipelineJob("${projectName}-${projectRepositoryBranch}-build-gradle-push-image")
                 git {
                     remote {
                         url(frodoRepositoryUrl)
-                        credentials(frodoCredential)
+                        credentials(frodoRepositoryCredential)
                     }
                     branch(frodoBranch)
                     scriptPath("jenkinsfile/build-gradle-push-image.Jenkinsfile")
