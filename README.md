@@ -4,6 +4,9 @@ ci/cd helper
 
 
 # helm chart
+
+helm chart repo 주소: https://adrenalinee.github.io/frodo
+
 charts 수정후 패키지 갱신을 위해 실행할 명령어
 
 1. 패키지 파일 생성(package 폴더에서)
