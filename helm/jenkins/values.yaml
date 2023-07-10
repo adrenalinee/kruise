@@ -44,6 +44,12 @@ controller:
             approvedSignatures:
             - method groovy.lang.GroovyObject getProperty java.lang.String
             - method groovy.lang.GroovyObject invokeMethod java.lang.String java.lang.Object
+            - method hudson.model.AbstractProject disable
+            - method hudson.model.Item getName
+            - method hudson.model.ItemGroup getItems
+            - method hudson.model.ViewGroup deleteView hudson.model.View
+            - method hudson.model.ViewGroup getView java.lang.String
+            - staticMethod hudson.model.Hudson getInstance
           queueItemAuthenticator:
             authenticators:
             - global:
@@ -59,7 +65,7 @@ controller:
       seed-jobs: |-
         jobs:
           - script: >
-              job("frodo-seed-init") {
+              job("frodo-init") {
                 description("frodo 에서 사용할 seed job 을 생성합니다.")
                 parameters {
                   credentialsParam("frodoRepositoryCredential") {
@@ -91,7 +97,9 @@ controller:
                 steps {
                   jobDsl {
                     targets(
-                      "jobDsl/createSeedJobDsl.groovy"
+                      "managingJobs/createSeedBuildGradlePushImageJobDsl.groovy\n" +
+                      "managingJobs/createToDeleteProjectJobDsl.groovy\n" +
+                      "managingJobs/createFrodoJobsView.groovy"
                     )
                     sandbox(true)
                   }

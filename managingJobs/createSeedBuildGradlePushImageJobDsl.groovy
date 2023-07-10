@@ -1,5 +1,5 @@
-job("frodo-seed-build-gradle-push-image") {
-    description("frodo 를 위한 build job 을 생성해주는 seed job 입니다.")
+job("frodo:seed-build-gradle-push-image") {
+    description("frodo 를 위한 build gradle push image job 을 생성해주는 seed job 입니다.")
     parameters {
         credentialsParam("frodoRepositoryCredential") {
             type("com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl")
@@ -60,24 +60,10 @@ job("frodo-seed-build-gradle-push-image") {
     steps {
         jobDsl {
             targets(
-                "jobDsl/createBuildGradlePushImageJobDsl.groovy"
+                "seedJobs/createBuildGradlePushImageJobDsl.groovy\n" +
+                "seedJobs/createView.groovy"
             )
             sandbox(true)
         }
-    }
-}
-
-listView("seed-jobs") {
-    jobs {
-        regex("frodo-seed-*")
-    }
-    columns {
-        status()
-        weather()
-        name()
-        lastSuccess()
-        lastFailure()
-        lastDuration()
-        buildButton()
     }
 }
