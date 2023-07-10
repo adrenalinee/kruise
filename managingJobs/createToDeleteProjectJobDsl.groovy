@@ -31,7 +31,7 @@ pipelineJob("frodo-delete-project-jobs") {
                 git {
                     remote {
                         url(frodoRepositoryUrl)
-                        credentials(frodoCredential)
+                        credentials(frodoRepositoryCredential)
                     }
                     branch(frodoBranch)
                     scriptPath("jenkinsfile/delete-project-jobs.Jenkinsfile")
