@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "frodo-spring-boot.name" . }}
+  name: {{ include "frodo-standard-server.name" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "frodo-spring-boot.labels" . | nindent 4 }}
+    {{- include "frodo-standard-server.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -13,4 +13,4 @@ spec:
       protocol: TCP
       name: http
   selector:
-    {{- include "frodo-spring-boot.selectorLabels" . | nindent 4 }}
+    {{- include "frodo-standard-server.selectorLabels" . | nindent 4 }}

@@ -35,6 +35,9 @@ controller:
     - build-user-vars-plugin
   JCasC:
     configScripts:
+      welcome-message: |-
+        jenkins:
+          systemMessage: "frodo 가 관리하는 jenkins 입니다."
       authorization: |-
         security:
           scriptApproval:
@@ -56,10 +59,10 @@ controller:
       seed-jobs: |-
         jobs:
           - script: >
-              job("frodo-seed-job") {
-                description("frodo 를 위한 build job 을 생성해주는 seed job 입니다.")
+              job("frodo-seed-init") {
+                description("frodo 에서 사용할 seed job 을 생성합니다.")
                 parameters {
-                  credentialsParam("frodoCredential") {
+                  credentialsParam("frodoRepositoryCredential") {
                     type("com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl")
                     description("빌드 스크립트를 다운받을때 사용할 인증 token 을 지정하세요.")
                   }
@@ -80,7 +83,7 @@ controller:
                   git {
                     branch('$frodoBranch')
                     remote {
-                      credentials('$frodoCredential')
+                      credentials('$frodoRepositoryCredential')
                       url('$frodoRepositoryUrl')
                     }
                   }
@@ -88,9 +91,7 @@ controller:
                 steps {
                   jobDsl {
                     targets(
-                      "jobDsl/createBuildGradleJobDsl.groovy\n" +
-                      "jobDsl/createBuildGradlePushImageJobDsl.groovy\n" +
-                      "jobDsl/createDeployK8s.groovy"
+                      "jobDsl/createSeedJobDsl.groovy"
                     )
                     sandbox(true)
                   }
