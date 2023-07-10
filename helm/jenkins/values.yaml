@@ -49,6 +49,7 @@ controller:
             - method hudson.model.ItemGroup getItems
             - method hudson.model.ViewGroup deleteView hudson.model.View
             - method hudson.model.ViewGroup getView java.lang.String
+            - method jenkins.model.ParameterizedJobMixIn$ParameterizedJob setDisabled boolean
             - staticMethod jenkins.model.Jenkins getInstance
           queueItemAuthenticator:
             authenticators:
