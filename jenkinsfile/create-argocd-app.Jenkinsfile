@@ -46,7 +46,7 @@ podTemplate(
     }
 }
 
-def getArgocdAppCreateCommand(token) {
+def getArgocdAppCreateCommand() {
     return """argocd app create ${projectName} \
 --plaintext \
 --server argo-cd-argocd-server.argo-cd.svc.cluster.local \
