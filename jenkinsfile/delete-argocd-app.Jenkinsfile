@@ -3,8 +3,8 @@ final String argocdImage = "docker.io/bitnami/argo-cd:2.7.7"
 final Integer idleMinutes = 60
 final Integer instanceCap = 5
 
-final String frodoAdminToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcmdvY2QiLCJzdWIiOiJmcm9kb0FkbWluOmFwaUtleSIsIm5iZiI6MTY4OTIyNTAwMSwiaWF0IjoxNjg5MjI1MDAxLCJqdGkiOiI4MzdjNjBhYS0zYjUxLTQzYmItYTI4MC0yZGI5MDUyOTA1MjEifQ.G1C8bJq6VnxNaPDKaOT6celQ2YnWmomT13a9iDfxhPc"
-
+final def frodoAdminToken = params.frodoAdminToken
+final String projectName = params.projectName
 
 podTemplate(
     name: "jenkins-agent-argocd",
@@ -25,13 +25,21 @@ podTemplate(
     node("jenkins-agent-argocd") {
         stage("execute") {
             container("argocd") {
-                sh(
-"""argocd app delete hello-world-3 \
---plaintext \
---server argo-cd-argocd-server.argo-cd.svc.cluster.local \
---auth-token ${frodoAdminToken}"""
-                )
+                withCredentials([
+                    string(
+                        credentialsId: frodoAdminToken,
+                        variable: "token"
+                    )
+                ]) {
+                    sh(getArgocdAppDeleteCommand() + ' --auth-token=$token')
+                }
             }
         }
     }
+}
+
+def getArgocdAppDeleteCommand() {
+    return """argocd app delete ${projectName} \
+--plaintext \
+--server argo-cd-argocd-server.argo-cd.svc.cluster.local"""
 }
