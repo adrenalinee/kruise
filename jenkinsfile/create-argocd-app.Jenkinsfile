@@ -33,14 +33,21 @@ podTemplate(
     node("jenkins-agent-argocd") {
         stage("execute") {
             container("argocd") {
-                sh(getArgocdAppCreateCommand())
+                withCredentials([
+                    string(
+                        credentialsId: frodoAdminToken,
+                        variable: "token"
+                    )
+                ]) {
+                    sh(getArgocdAppCreateCommand() + ' --auth-token=$token')
+                }
             }
         }
     }
 }
 
-def getArgocdAppCreateCommand() {
-    String result = """argocd app create ${projectName} \
+def getArgocdAppCreateCommand(token) {
+    return """argocd app create ${projectName} \
 --plaintext \
 --server argo-cd-argocd-server.argo-cd.svc.cluster.local \
 --repo ${helmChartRepositoryUrl} \
@@ -51,18 +58,5 @@ def getArgocdAppCreateCommand() {
 --sync-option CreateNamespace=true \
 --sync-policy automated \
 --helm-set image.repository=${imagePath} \
---helm-set image.tag=${imageTag} \
-"""
-
-    withCredentials([
-        string(
-            credentialsId: frodoAdminToken,
-            variable: "token"
-        )
-    ]) {
-        println(token)
-        result += '--auth-token=$token'
-    }
-    println(result)
-    return result
+--helm-set image.tag=${imageTag}"""
 }
