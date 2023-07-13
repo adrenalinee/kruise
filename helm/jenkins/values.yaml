@@ -100,8 +100,9 @@ controller:
                   jobDsl {
                     targets(
                       "managingJobs/createSeedBuildGradlePushImageJobDsl.groovy\n" +
-                      "managingJobs/createToDeleteProjectJobDsl.groovy\n" +
+                      "managingJobs/createToDeleteFrodoProjectJobDsl.groovy\n" +
                       "managingJobs/createToCreateArgocdAppJobDsl.groovy\n" +
+                      "managingJobs/createToDeleteArgocdAppJobDsl.groovy.groovy\n" +
                       "managingJobs/createFrodoJobsView.groovy"
                     )
                     sandbox(true)
