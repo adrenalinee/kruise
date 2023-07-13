@@ -1,4 +1,4 @@
-listView("frodo-jobs") {
+listView("frodo") {
     jobs {
         regex("frodo-.*")
     }
