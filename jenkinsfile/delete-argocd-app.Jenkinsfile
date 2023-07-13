@@ -26,15 +26,9 @@ podTemplate(
         stage("execute") {
             container("argocd") {
                 sh(
-"""argocd app create hello-world-3 \
+"""argocd app delete hello-world-3 \
 --plaintext \
 --server argo-cd-argocd-server.argo-cd.svc.cluster.local \
---repo https://github.com/adrenalinee/frodo.git \
---path charts/frodo-standard-server \
---dest-namespace hello-world3 \
---dest-server https://kubernetes.default.svc \
---sync-policy automated \
---helm-set image.tag=20230710-071748 \
 --auth-token ${frodoAdminToken}"""
                 )
             }

@@ -23,6 +23,7 @@ controller:
     - git
     - configuration-as-code
     - pipeline-stage-view
+    - pipeline-graph-view
     - remote-file
     - http_request
     - matrix-auth
@@ -100,6 +101,7 @@ controller:
                     targets(
                       "managingJobs/createSeedBuildGradlePushImageJobDsl.groovy\n" +
                       "managingJobs/createToDeleteProjectJobDsl.groovy\n" +
+                      "managingJobs/createToCreateArgocdAppJobDsl.groovy\n" +
                       "managingJobs/createFrodoJobsView.groovy"
                     )
                     sandbox(true)
