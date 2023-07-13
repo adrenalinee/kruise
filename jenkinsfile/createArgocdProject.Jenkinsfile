@@ -3,7 +3,7 @@ final String argocdImage = "docker.io/bitnami/argo-cd:2.7.7"
 final Integer idleMinutes = 60
 final Integer instanceCap = 5
 
-final String frodoAdminToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcmdvY2QiLCJzdWIiOiJmcm9kb0FkbWluOmFwaUtleSIsIm5iZiI6MTY4OTEzMjY2MCwiaWF0IjoxNjg5MTMyNjYwLCJqdGkiOiI2ZTY3NTlmNy0yNTM2LTRlNzktYWJiZS04NWM5MTI4N2ZjODgifQ.SdEi2vNFsCZGtAULc6LRmjHimRzzHgUlP7MUCW4UQUw"
+final String frodoAdminToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcmdvY2QiLCJzdWIiOiJmcm9kb0FkbWluOmFwaUtleSIsIm5iZiI6MTY4OTIyNTAwMSwiaWF0IjoxNjg5MjI1MDAxLCJqdGkiOiI4MzdjNjBhYS0zYjUxLTQzYmItYTI4MC0yZGI5MDUyOTA1MjEifQ.G1C8bJq6VnxNaPDKaOT6celQ2YnWmomT13a9iDfxhPc"
 
 
 podTemplate(

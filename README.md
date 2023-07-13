@@ -19,3 +19,17 @@ helm package ../charts/[챠트 경로]
 ```shell
 helm repo index .
 ```
+
+
+# 유용한 커멘드
+argocd login
+```shell
+argocd login localhost:9000 --skip-test-tls --username admin --password xxx
+```
+
+argocd generate token
+```shell
+argocd account generate-token --account frodoAdmin
+```
+
+
