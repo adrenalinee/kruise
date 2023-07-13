@@ -7,6 +7,7 @@ final String jdk20Image = "docker.io/eclipse-temurin:20.0.1_9-jdk-jammy"
 final Integer idleMinutes = 60
 final Integer instanceCap = 5
 
+final String projectName = params.projectName
 final String repositoryUrl = params.repositoryUrl
 final String branch = params.branch
 final Integer jdkVersion = params.jdkVersion.toInteger()
@@ -26,6 +27,31 @@ final String tagName = createTagName()
 final String imagePathTag = "${imagePath}:${tagName}"
 
 println("[FRODO] job parameters: ${params}")
+
+//validation ----
+if (projectName == "") {
+    error("[FRODO] projectName 은 필수값입니다.")
+}
+
+if (projectName == "frodo") {
+    error("[FRODO] 허용되지 않는 projectName 입니다. projectName: ${projectName}")
+}
+
+if (repositoryUrl == "") {
+    error("[FRODO] repositoryUrl 은 필수값입니다.")
+}
+
+if (branch == "") {
+    error("[FRODO] branch 은 필수값입니다.")
+}
+
+if (jdkVersion == "") {
+    error("[FRODO] jdkVersion 은 필수값입니다.")
+}
+
+if (imagePath == "") {
+    error("[FRODO] imagePath 은 필수값입니다.")
+}
 
 podTemplate(
     name: "jenkins-agent-build-gradle-push-image-jdk${jdkVersion}",
