@@ -40,26 +40,27 @@ podTemplate(
 }
 
 def getArgocdAppCreateCommand() {
-    final String result
+    String result = """argocd app create ${projectName} \
+--plaintext \
+--server argo-cd-argocd-server.argo-cd.svc.cluster.local \
+--repo ${helmChartRepositoryUrl} \
+--revision ${helmChartBranch} \
+--path ${helmChartPath} \
+--dest-namespace ${projectName} \
+--dest-server https://kubernetes.default.svc \
+--sync-option CreateNamespace=true \
+--sync-policy automated \
+--helm-set image.repository=${imagePath} \
+--helm-set image.tag=${imageTag} \
+"""
+
     withCredentials([
         string(
             credentialsId: frodoAdminToken,
             variable: "token"
         )
     ]) {
-        result = """argocd app create ${projectName} \
- --plaintext \
- --server argo-cd-argocd-server.argo-cd.svc.cluster.local \
- --repo ${helmChartRepositoryUrl} \
- --revision ${helmChartBranch} \
- --path ${helmChartPath} \
- --dest-namespace ${projectName} \
- --dest-server https://kubernetes.default.svc \
- --sync-option CreateNamespace=true \
- --sync-policy automated \
- --helm-set image.repository=${imagePath} \
- --helm-set image.tag=${imageTag} \
- --auth-token ${token}"""
+        result += '--auth-token=$token'
     }
     return result
 }
