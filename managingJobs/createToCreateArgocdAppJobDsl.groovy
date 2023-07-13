@@ -8,7 +8,7 @@ pipelineJob("frodo-create-argocd-app") {
         }
         credentialsParam("frodoAdminToken") {
             type("org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl")
-            defaultValue(frodoAdminToken)
+//            defaultValue(frodoAdminToken)
             required(true)
         }
         stringParam {
