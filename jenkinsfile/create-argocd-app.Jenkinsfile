@@ -61,9 +61,8 @@ def getArgocdAppCreateCommand() {
         )
     ]) {
         println(token)
-        def authToken = '--auth-token=$token'
-
-        result += authToken
+        result += '--auth-token=$token'
     }
+    println(result)
     return result
 }
