@@ -33,7 +33,7 @@ podTemplate(
     node("jenkins-agent-argocd") {
         stage("execute") {
             container("argocd") {
-                sh(getArgocdAppCreateCommand()
+                sh(getArgocdAppCreateCommand())
             }
         }
     }
