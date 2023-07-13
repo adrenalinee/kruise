@@ -12,7 +12,7 @@ agent:
 controller:
   sidecars:
     configAutoReload:
-      enabled: true
+      enabled: false
   installPlugins:
     - workflow-aggregator
     - ldap
