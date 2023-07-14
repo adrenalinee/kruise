@@ -7,9 +7,9 @@ final String projectRepositoryBranch = params.projectRepositoryBranch
 final String helmChartRepositoryUrl = params.helmChartRepositoryUrl
 final String helmChartBranch = params.helmChartBranch
 final String helmChartPath = params.helmChartPath
-final Integer jdkVersion = params.jdkVersion.toInteger()
+final String jdkVersion = params.jdkVersion
 final String imagePath = params.imagePath
-final String imageTag = params.imageTag
+// final String imageTag = params.imageTag
 
 println("[FRODO] job parameters: ${params}")
 
@@ -58,7 +58,7 @@ podTemplate(
                     string(name: "helmChartBranch", value: helmChartBranch),
                     string(name: "helmChartPath", value: helmChartPath),
                     string(name: "imagePath", value: imagePath),
-                    string(name: "imageTag", value: imageTag)
+//                     string(name: "imageTag", value: imageTag)
                 ]
             )
         }
