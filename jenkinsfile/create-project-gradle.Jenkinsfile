@@ -32,9 +32,6 @@ podTemplate(
     instanceCap: instanceCap, //최대 생성가능한 동일 스팩 팟 갯수.
 ) {
     node("jenkins-agent-default") {
-//         stage("Checkout") {
-//             checkout(scm)
-//         }
         stage("createSeedJobs") {
             build(
                 job: "frodo.seed.create-build-gradle-push-image",
@@ -58,7 +55,7 @@ podTemplate(
                     string(name: "helmChartBranch", value: helmChartBranch),
                     string(name: "helmChartPath", value: helmChartPath),
                     string(name: "imagePath", value: imagePath),
-//                     string(name: "imageTag", value: imageTag)
+                    string(name: "imageTag", value: "")
                 ]
             )
         }
