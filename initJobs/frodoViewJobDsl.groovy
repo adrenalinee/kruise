@@ -3,9 +3,9 @@ nestedView("frodo") {
         status()
         weather()
     }
-    configure { view ->
-        view / defaultView("Action")
-    }
+//    configure { view ->
+//        view / defaultView("Action")
+//    }
     views {
         listView(" All") {
             jobs {
