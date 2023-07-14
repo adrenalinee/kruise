@@ -24,9 +24,9 @@ podTemplate(
     instanceCap: instanceCap, //최대 생성가능한 동일 스팩 팟 갯수.
 ) {
     node("jenkins-agent-default") {
-        stage("Checkout") {
-            checkout(scm)
-        }
+//         stage("Checkout") {
+//             checkout(scm)
+//         }
         stage("deleteJenkinsView") {
             def projectView = Jenkins.instance.getView(projectName)
             Jenkins.instance.deleteView(projectView)

@@ -1,4 +1,4 @@
-pipelineJob("frodo.delete-argocd-app") {
+pipelineJob("frodo.create-project-gradle") {
     description("frodo seed job 으로 생성한 job 들을 삭제 합니다. projectName 단위로 삭제합니다.")
     parameters {
         credentialsParam("frodoRepositoryCredential") {
@@ -6,11 +6,6 @@ pipelineJob("frodo.delete-argocd-app") {
             defaultValue(frodoRepositoryCredential)
             description("빌드 스크립트를 다운받을때 사용할 인증 token 을 지정하세요.")
         }
-//        credentialsParam("frodoAdminToken") {
-//            type("org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl")
-////            defaultValue(frodoAdminToken)
-//            required(true)
-//        }
         stringParam {
             name("frodoRepositoryUrl")
             defaultValue(frodoRepositoryUrl)
@@ -25,8 +20,20 @@ pipelineJob("frodo.delete-argocd-app") {
         }
         stringParam {
             name("projectName")
-            defaultValue("hello-world")
-            description("프로젝트 이름입니다. 생성되는 job 들의 prefix 가 됩니다. 주의: 다른 프로젝트와 중복되면 안됩니다. 해당 프로젝트를 덮어쓰게 됩니다.")
+//            defaultValue("hello-world")
+            description("생성 할 프로젝트 이름입니다. 다른 프로젝트와 이름이 겹치지 않게 주의해주세요.")
+            trim(true)
+        }
+        stringParam {
+            name("projectRepositoryUrl")
+            defaultValue("https://github.com/adrenalinee/hello-world-kotlin.git")
+            description("빌드를 수행할 git 주소입니다.")
+            trim(true)
+        }
+        stringParam {
+            name("projectRepositoryBranch")
+            defaultValue("develop")
+            description("빌드를 수행할 기본 branch 입니다.")
             trim(true)
         }
         stringParam {
@@ -47,16 +54,15 @@ pipelineJob("frodo.delete-argocd-app") {
             description("helm chart 경로 입니다.")
             trim(true)
         }
-        stringParam {
-            name("imagePath")
-            defaultValue("adrenalinee/hello-world-kotlin")
-            description("container image 경로 입니다.")
-            trim(true)
+        choiceParam {
+            name("jdkVersion")
+            choices(["17", "20"])
+            description("build 를 진행할 jdk 의 버전을 지정합니다.")
         }
         stringParam {
-            name("imageTag")
-            defaultValue("20230710-071748")
-            description("container image tag 입니다.")
+            name("imagePath")
+            defaultValue("docker.io/adrenalinee/hello-world-kotlin")
+            description("pushImage = true 일 경우에 필수값입니다. image push 할 주소 입니다. 프로토콜을 제외한 경로 입니다. ex) domain/owner/repo")
             trim(true)
         }
     }
@@ -69,7 +75,7 @@ pipelineJob("frodo.delete-argocd-app") {
                         credentials(frodoRepositoryCredential)
                     }
                     branch(frodoBranch)
-                    scriptPath("jenkinsfile/delete-argocd-app.Jenkinsfile")
+                    scriptPath("jenkinsfile/create-project-gradle.Jenkinsfile")
                 }
             }
         }

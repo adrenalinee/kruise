@@ -1,4 +1,4 @@
-pipelineJob("frodo.delete-frodo-project") {
+pipelineJob("frodo.argocd.delete-app") {
     description("frodo seed job 으로 생성한 job 들을 삭제 합니다. projectName 단위로 삭제합니다.")
     parameters {
         credentialsParam("frodoRepositoryCredential") {
@@ -6,6 +6,11 @@ pipelineJob("frodo.delete-frodo-project") {
             defaultValue(frodoRepositoryCredential)
             description("빌드 스크립트를 다운받을때 사용할 인증 token 을 지정하세요.")
         }
+//        credentialsParam("frodoAdminToken") {
+//            type("org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl")
+////            defaultValue(frodoAdminToken)
+//            required(true)
+//        }
         stringParam {
             name("frodoRepositoryUrl")
             defaultValue(frodoRepositoryUrl)
@@ -20,8 +25,8 @@ pipelineJob("frodo.delete-frodo-project") {
         }
         stringParam {
             name("projectName")
-//            defaultValue("hello-world")
-            description("삭제 할 프로젝트 이름입니다. 다른 프로젝트를 지우지 않도록 주의해주세요.")
+            defaultValue("hello-world")
+            description("프로젝트 이름입니다. 생성되는 job 들의 prefix 가 됩니다. 주의: 다른 프로젝트와 중복되면 안됩니다. 해당 프로젝트를 덮어쓰게 됩니다.")
             trim(true)
         }
     }
@@ -34,7 +39,7 @@ pipelineJob("frodo.delete-frodo-project") {
                         credentials(frodoRepositoryCredential)
                     }
                     branch(frodoBranch)
-                    scriptPath("jenkinsfile/delete-frodo-project.Jenkinsfile")
+                    scriptPath("jenkinsfile/argocd-delete-app.Jenkinsfile")
                 }
             }
         }

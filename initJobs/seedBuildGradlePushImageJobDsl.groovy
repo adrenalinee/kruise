@@ -1,4 +1,4 @@
-job("frodo.seed-build-gradle-push-image") {
+job("frodo.seed.create-build-gradle-push-image") {
     description("frodo 를 위한 build gradle push image job 을 생성해주는 seed job 입니다.")
     parameters {
         credentialsParam("frodoRepositoryCredential") {

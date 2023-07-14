@@ -98,13 +98,7 @@ controller:
                 }
                 steps {
                   jobDsl {
-                    targets(
-                      "managingJobs/createSeedBuildGradlePushImageJobDsl.groovy\n" +
-                      "managingJobs/createToDeleteFrodoProjectJobDsl.groovy\n" +
-                      "managingJobs/createToCreateArgocdAppJobDsl.groovy\n" +
-                      "managingJobs/createToDeleteArgocdAppJobDsl.groovy\n" +
-                      "managingJobs/createFrodoJobsView.groovy"
-                    )
+                    targets("initJobs/**.groovy")
                     sandbox(true)
                   }
                 }
