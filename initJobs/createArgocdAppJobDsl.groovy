@@ -1,4 +1,4 @@
-pipelineJob("frodo.create.argocd-app") {
+pipelineJob("frodo.managed.create-argocd-app") {
     description("argocd app 을 생성합니다.")
     parameters {
         stringParam {
