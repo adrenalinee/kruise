@@ -46,6 +46,7 @@ controller:
             - method groovy.lang.GroovyObject getProperty java.lang.String
             - method groovy.lang.GroovyObject invokeMethod java.lang.String java.lang.Object
             - method hudson.model.AbstractProject disable
+            - method hudson.model.Item delete
             - method hudson.model.Item getName
             - method hudson.model.ItemGroup getItems
             - method hudson.model.ViewGroup deleteView hudson.model.View
