@@ -34,7 +34,7 @@ podTemplate(
     node("jenkins-agent-default") {
         stage("createSeedJobs") {
             build(
-                job: "frodo.seed.create-build-gradle-push-image",
+                job: "frodo.seed.build-gradle-push-image",
                 wait: true,
                 parameters: [
                     string(name: "projectName", value: projectName),
