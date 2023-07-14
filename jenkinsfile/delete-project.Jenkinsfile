@@ -38,7 +38,7 @@ podTemplate(
         }
         stage("deleteArgocdApp") {
             build(
-                job: "frodo.delete-argocd-app",
+                job: "frodo.argo.delete-app",
                 wait: true,
                 parameters: [
                     string(name: "projectName", value: projectName)
