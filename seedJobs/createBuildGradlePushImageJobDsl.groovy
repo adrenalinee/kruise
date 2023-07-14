@@ -11,7 +11,7 @@ if (imagePath == "") {
     error("[FRODO] imagePath 는 팔수값입니다.")
 }
 
-pipelineJob("${projectName}.${projectRepositoryBranch}.build-gradle-push-image") {
+pipelineJob("${projectName}.pipeline.${projectRepositoryBranch}.build-gradle-push-image") {
     parameters {
         credentialsParam("repositoryCredential") {
             type("com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl")

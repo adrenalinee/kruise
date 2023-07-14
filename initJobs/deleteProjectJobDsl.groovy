@@ -1,4 +1,4 @@
-pipelineJob("frodo.delete.project") {
+pipelineJob("frodo.action.delete-project") {
     description("frodo seed job 으로 생성한 job 들을 삭제 합니다. projectName 단위로 삭제합니다.")
     parameters {
         credentialsParam("frodoRepositoryCredential") {
