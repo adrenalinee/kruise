@@ -20,7 +20,7 @@ pipelineJob("frodo.create-project-gradle") {
         }
         stringParam {
             name("projectName")
-//            defaultValue("hello-world")
+            defaultValue("hello-world")
             description("생성 할 프로젝트 이름입니다. 다른 프로젝트와 이름이 겹치지 않게 주의해주세요.")
             trim(true)
         }
