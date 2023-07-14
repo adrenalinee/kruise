@@ -27,14 +27,23 @@ podTemplate(
         stage("Checkout") {
             checkout(scm)
         }
-        stage("deleteProjectView") {
+        stage("deleteJenkinsView") {
             def projectView = Jenkins.instance.getView(projectName)
             Jenkins.instance.deleteView(projectView)
         }
-        stage("disableProjectJobs") {
+        stage("disableJenkinsJobs") {
             Jenkins.instance.items
-                .findAll { job -> job.name =~ "${projectName}-.*" }
+                .findAll { job -> job.name =~ "${projectName}\\..*" }
                 .each { job -> job.setDisabled(true) }
+        }
+        stage("deleteArgocdApp") {
+            build(
+                job: "frodo.delete-argocd-app",
+                wait: true,
+                parameters: [
+                    string(name: "projectName", value: projectName)
+                ]
+            )
         }
     }
 }

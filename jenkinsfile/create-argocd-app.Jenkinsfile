@@ -5,7 +5,7 @@ final Integer instanceCap = 5
 
 // final String frodoAdminToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcmdvY2QiLCJzdWIiOiJmcm9kb0FkbWluOmFwaUtleSIsIm5iZiI6MTY4OTIyNTAwMSwiaWF0IjoxNjg5MjI1MDAxLCJqdGkiOiI4MzdjNjBhYS0zYjUxLTQzYmItYTI4MC0yZGI5MDUyOTA1MjEifQ.G1C8bJq6VnxNaPDKaOT6celQ2YnWmomT13a9iDfxhPc"
 
-final def frodoAdminToken = params.frodoAdminToken
+// final def frodoAdminToken = params.frodoAdminToken
 final String projectName = params.projectName
 final String helmChartRepositoryUrl = params.helmChartRepositoryUrl
 final String helmChartBranch = params.helmChartBranch
@@ -35,7 +35,7 @@ podTemplate(
             container("argocd") {
                 withCredentials([
                     string(
-                        credentialsId: frodoAdminToken,
+                        credentialsId: "argoAdminToken",
                         variable: "token"
                     )
                 ]) {

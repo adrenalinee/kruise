@@ -3,7 +3,7 @@ final String argocdImage = "docker.io/bitnami/argo-cd:2.7.7"
 final Integer idleMinutes = 60
 final Integer instanceCap = 5
 
-final def frodoAdminToken = params.frodoAdminToken
+// final def frodoAdminToken = params.frodoAdminToken
 final String projectName = params.projectName
 
 podTemplate(
@@ -27,7 +27,7 @@ podTemplate(
             container("argocd") {
                 withCredentials([
                     string(
-                        credentialsId: frodoAdminToken,
+                        credentialsId: "argoAdminToken",
                         variable: "token"
                     )
                 ]) {

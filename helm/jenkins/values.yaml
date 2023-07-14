@@ -67,7 +67,7 @@ controller:
       seed-jobs: |-
         jobs:
           - script: >
-              job("frodo-init") {
+              job("frodo.init") {
                 description("frodo 에서 사용할 seed job 을 생성합니다.")
                 parameters {
                   credentialsParam("frodoRepositoryCredential") {

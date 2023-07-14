@@ -1,6 +1,6 @@
 listView("frodo") {
     jobs {
-        regex("frodo-.*")
+        regex("frodo\\..*")
     }
     columns {
         status()
