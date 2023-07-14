@@ -1,28 +1,6 @@
-pipelineJob("frodo.create-argocd-app") {
-    description("frodo seed job 으로 생성한 job 들을 삭제 합니다. projectName 단위로 삭제합니다.")
+pipelineJob("frodo.argocd.create-app") {
+    description("argocd app 을 생성합니다.")
     parameters {
-        credentialsParam("frodoRepositoryCredential") {
-            type("com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl")
-            defaultValue(frodoRepositoryCredential)
-            description("빌드 스크립트를 다운받을때 사용할 인증 token 을 지정하세요.")
-        }
-//        credentialsParam("frodoAdminToken") {
-//            type("org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl")
-////            defaultValue(frodoAdminToken)
-//            required(true)
-//        }
-        stringParam {
-            name("frodoRepositoryUrl")
-            defaultValue(frodoRepositoryUrl)
-            description("빌드 스크립트를 가져올 git 주소입니다.")
-            trim(true)
-        }
-        stringParam {
-            name("frodoBranch")
-            defaultValue(frodoBranch)
-            description("빌드 스크립트를 가져올 branch 입니다.")
-            trim(true)
-        }
         stringParam {
             name("projectName")
             defaultValue("hello-world")
