@@ -27,7 +27,7 @@ podTemplate(
             container("argocd") {
                 withCredentials([
                     string(
-                        credentialsId: "argoAdminToken",
+                        credentialsId: "argocdAdminToken",
                         variable: "token"
                     )
                 ]) {
