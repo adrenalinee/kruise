@@ -31,7 +31,19 @@ podTemplate(
     ]
 ) {
     node("jenkins-agent-argocd") {
-        stage("execute") {
+        stage("create argocd project") {
+            container("argocd") {
+                withCredentials([
+                    string(
+                        credentialsId: "argocdAdminToken",
+                        variable: "token"
+                    )
+                ]) {
+                    sh(getArgocdProjCreateCommand() + ' --auth-token=$token')
+                }
+            }
+        }
+        stage("create argocd application") {
             container("argocd") {
                 withCredentials([
                     string(
@@ -47,16 +59,23 @@ podTemplate(
 }
 
 def getArgocdAppCreateCommand() {
-    return """argocd app create ${projectName} \
---plaintext \
---server argo-cd-argocd-server.argo-cd.svc.cluster.local \
---repo ${helmChartRepositoryUrl} \
---revision ${helmChartBranch} \
---path ${helmChartPath} \
---dest-namespace ${projectName} \
---dest-server https://kubernetes.default.svc \
---sync-option CreateNamespace=true \
---sync-policy none \
---helm-set image.repository=${imagePath} \
+    return """argocd app create ${projectName} \\
+--plaintext \\
+--server argo-cd-argocd-server.argo-cd.svc.cluster.local \\
+--repo ${helmChartRepositoryUrl} \\
+--revision ${helmChartBranch} \\
+--path ${helmChartPath} \\
+--dest-namespace ${projectName} \\
+--dest-server https://kubernetes.default.svc \\
+--sync-option CreateNamespace=true \\
+--sync-policy none \\
+--helm-set image.repository=${imagePath} \\
 --helm-set image.tag=${imageTag}"""
+}
+
+def getArgocdProjCreateCommand() {
+    return """argocd proj create ${projectName} \\
+--plaintext \\
+--server argo-cd-argocd-server.argo-cd.svc.cluster.local \\
+--description \"frodo 에서 생성한 project 입니다.\""""
 }

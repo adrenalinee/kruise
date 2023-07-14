@@ -23,8 +23,8 @@ if (jdkVersion == 17) {
 }
 
 final String containerRegistryAddr = imagePath.substring(0, imagePath.indexOf("/"))
-final String tagName = createTagName()
-final String imagePathTag = "${imagePath}:${tagName}"
+// final String tagName = createTagName()
+final String imagePathTag // = "${imagePath}:${tagName}"
 
 println("[FRODO] job parameters: ${params}")
 
@@ -93,6 +93,10 @@ podTemplate(
             container("podman") {
                 echo(readFile("Dockerfile"))
 
+                final String shortCommitId = sh(script: "git rev-parse HEAD", returnStdout: true)
+                final String tagName = createTagName(shortCommitId)
+                imagePathTag = "${imagePath}:${tagName}"
+
                 sh("podman build -t ${imagePathTag} .")
                 sh("podman images")
             }
@@ -124,9 +128,11 @@ podTemplate(
     }
 }
 
-def createTagName() {
-    return LocalDateTime.now()
+def createTagName(shortCommitId) {
+    final String now = LocalDateTime.now()
         .format(DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss"))
+
+    return "${now}-${shortCommitId}"
 
     // println("createTagName-----")
     // def gitCommit = env.GIT_COMMIT.substring(0,8)
