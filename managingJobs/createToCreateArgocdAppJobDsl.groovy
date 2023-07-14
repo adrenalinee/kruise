@@ -6,11 +6,11 @@ pipelineJob("frodo.create-argocd-app") {
             defaultValue(frodoRepositoryCredential)
             description("빌드 스크립트를 다운받을때 사용할 인증 token 을 지정하세요.")
         }
-        credentialsParam("frodoAdminToken") {
-            type("org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl")
-//            defaultValue(frodoAdminToken)
-            required(true)
-        }
+//        credentialsParam("frodoAdminToken") {
+//            type("org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl")
+////            defaultValue(frodoAdminToken)
+//            required(true)
+//        }
         stringParam {
             name("frodoRepositoryUrl")
             defaultValue(frodoRepositoryUrl)

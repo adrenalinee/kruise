@@ -6,7 +6,7 @@ nestedView(projectName) {
     views {
         listView(projectRepositoryBranch) {
             jobs {
-                regex("${projectName}-${projectRepositoryBranch}-.*")
+                regex("${projectName}.${projectRepositoryBranch}.*")
             }
             columns {
                 status()
