@@ -56,7 +56,7 @@ def getArgocdAppCreateCommand() {
 --dest-namespace ${projectName} \
 --dest-server https://kubernetes.default.svc \
 --sync-option CreateNamespace=true \
---sync-policy automated \
+--sync-policy none \
 --helm-set image.repository=${imagePath} \
 --helm-set image.tag=${imageTag}"""
 }
