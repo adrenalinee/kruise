@@ -67,7 +67,6 @@ pipelineJob("${projectName}.${projectRepositoryBranch}.build-gradle-push-image")
             }
         }
     }
-    disabled(false)
     properties {
         disableConcurrentBuilds()
     }

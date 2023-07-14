@@ -24,17 +24,15 @@ podTemplate(
     instanceCap: instanceCap, //최대 생성가능한 동일 스팩 팟 갯수.
 ) {
     node("jenkins-agent-default") {
-//         stage("Checkout") {
-//             checkout(scm)
-//         }
         stage("deleteJenkinsView") {
             def projectView = Jenkins.instance.getView(projectName)
             Jenkins.instance.deleteView(projectView)
         }
-        stage("disableJenkinsJobs") {
+        stage("deleteJenkinsJobs") {
             Jenkins.instance.items
                 .findAll { job -> job.name =~ "${projectName}\\..*" }
-                .each { job -> job.setDisabled(true) }
+                .each { job -> job.delete() }
+//                 .each { job -> job.setDisabled(true) }
         }
         stage("deleteArgocdApp") {
             build(
