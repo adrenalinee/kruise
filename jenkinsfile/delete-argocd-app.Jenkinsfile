@@ -23,7 +23,7 @@ podTemplate(
     ]
 ) {
     node("jenkins-agent-argocd") {
-        stage("execute") {
+        stage("delete argocd application") {
             container("argocd") {
                 withCredentials([
                     string(
@@ -35,11 +35,29 @@ podTemplate(
                 }
             }
         }
+        stage("delete argocd project") {
+            container("argocd") {
+                withCredentials([
+                    string(
+                        credentialsId: "argocdAdminToken",
+                        variable: "token"
+                    )
+                ]) {
+                    sh(getArgocdProjDeleteCommand() + ' --auth-token=$token')
+                }
+            }
+        }
     }
 }
 
 def getArgocdAppDeleteCommand() {
     return """argocd app delete ${projectName} \
+--plaintext \
+--server argo-cd-argocd-server.argo-cd.svc.cluster.local"""
+}
+
+def getArgocdProjDeleteCommand() {
+    return """argocd proj delete ${projectName} \
 --plaintext \
 --server argo-cd-argocd-server.argo-cd.svc.cluster.local"""
 }

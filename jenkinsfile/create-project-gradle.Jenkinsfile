@@ -47,7 +47,7 @@ podTemplate(
         }
         stage("createArgocdApp") {
             build(
-                job: "frodo.argocd.create-app",
+                job: "frodo.create.argocd-app",
                 wait: true,
                 parameters: [
                     string(name: "projectName", value: projectName),
