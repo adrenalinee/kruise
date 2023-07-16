@@ -92,7 +92,7 @@ podTemplate(
         stage("Build image") {
             echo(readFile("Dockerfile"))
 
-            final String shortCommitId = sh(script: "git rev-parse HEAD", returnStdout: true)
+            final String shortCommitId = sh(script: "git rev-parse --short HEAD", returnStdout: true)
             final String tagName = createTagName(shortCommitId)
             imagePathTag = "${imagePath}:${tagName}"
 
