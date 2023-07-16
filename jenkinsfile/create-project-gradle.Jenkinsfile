@@ -34,7 +34,7 @@ podTemplate(
     node("jenkins-agent-default") {
         stage("createSeedJobs") {
             build(
-                job: "frodo.seed.build-gradle-push-image",
+                job: "frodo.managed.seed.build-gradle-push-image",
                 wait: true,
                 parameters: [
                     string(name: "projectName", value: projectName),
@@ -47,7 +47,7 @@ podTemplate(
         }
         stage("createArgocdApp") {
             build(
-                job: "frodo.create.argocd-app",
+                job: "frodo.managed.create.argocd-app",
                 wait: true,
                 parameters: [
                     string(name: "projectName", value: projectName),
