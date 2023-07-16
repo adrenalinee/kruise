@@ -97,7 +97,7 @@ podTemplate(
             imagePathTag = "${imagePath}:${tagName}"
 
             container("podman") {
-                sh("podman build -t ${imagePathTag} .")
+                sh("podman build -t ${imagePathTag} .......")
                 sh("podman images")
             }
         }
