@@ -23,8 +23,8 @@ if (jdkVersion == 17) {
 }
 
 final String containerRegistryAddr = imagePath.substring(0, imagePath.indexOf("/"))
-// final String tagName = createTagName()
-final String imagePathTag // = "${imagePath}:${tagName}"
+final String imageTag
+
 
 println("[FRODO] job parameters: ${params}")
 
@@ -89,20 +89,19 @@ podTemplate(
             }
         }
 
-        stage("Build image") {
+        stage("Build container image") {
             echo(readFile("Dockerfile"))
 
             final String shortCommitId = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
-            final String tagName = createTagName(shortCommitId)
-            imagePathTag = "${imagePath}:${tagName}"
+            imageTag = createTagName(shortCommitId)
 
             container("podman") {
-                sh("podman build -t ${imagePathTag} .")
+                sh("podman build -t ${imagePath}:${imageTag} .")
                 sh("podman images")
             }
         }
 
-        stage("Push image") {
+        stage("Push container image") {
             container("podman") {
                 try {
                     withCredentials([
@@ -125,6 +124,17 @@ podTemplate(
                 }
             }
         }
+
+        stage("modify and sync argocd application") {
+            build(
+                job: "${projectName}.pipeline.${projectRepositoryBranch}.modify-sync-argocd-app",
+                wait: true,
+                parameters: [
+                    string(name: "projectName", value: projectName),
+                    string(name: "imageTag", value: imageTag)
+                ]
+            )
+        }
     }
 }
 
@@ -133,14 +143,4 @@ def createTagName(shortCommitId) {
         .format(DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss"))
 
     return "${now}-${shortCommitId}"
-
-    // println("createTagName-----")
-    // def gitCommit = env.GIT_COMMIT.substring(0,8)
-    // def branchName = env.BRANCH_NAME
-    // def unixTime = (new Date().time.intdiv(1000))
-    // println(gitCommit)
-    // println(branchName)
-    // println(unixTime)
-
-    // return "${branchName}-${gitCommit}-${unixTime}"
 }
