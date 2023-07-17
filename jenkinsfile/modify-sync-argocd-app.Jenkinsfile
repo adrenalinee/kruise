@@ -59,18 +59,29 @@ podTemplate(
 }
 
 def getArgocdAppModifyCommand() {
-    return """argocd app set ${projectName} \\
---plaintext \\
---server argo-cd-argocd-server.argo-cd.svc.cluster.local \\
---repo ${helmChartRepositoryUrl} \\
---revision ${helmChartBranch} \\
---path ${helmChartPath} \\
---helm-set image.tag=${imageTag}"""
+    String command = """argocd app set ${projectName} \
+--plaintext \
+--server argo-cd-argocd-server.argo-cd.svc.cluster.local"""
+
+    if (helmChartRepositoryUrl != "") {
+        command += " --repo ${helmChartRepositoryUrl}"
+    }
+    if (helmChartBranch != "") {
+        command += " --revision ${helmChartBranch}"
+    }
+    if (helmChartPath != "") {
+        command += " --path ${helmChartPath}"
+    }
+    if (imageTag != "") {
+        command += " --helm-set image.tag=${imageTag}"
+    }
+
+    return command
 }
 
 def getArgocdAppSyncCommand() {
-    return """argocd app sync ${projectName} \\
---plaintext \\
---server argo-cd-argocd-server.argo-cd.svc.cluster.local \\
+    return """argocd app sync ${projectName} \
+--plaintext \
+--server argo-cd-argocd-server.argo-cd.svc.cluster.local \
 --prune"""
 }
