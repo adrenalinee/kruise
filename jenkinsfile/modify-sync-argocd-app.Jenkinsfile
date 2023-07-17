@@ -5,12 +5,11 @@ final Integer instanceCap = 5
 
 // final String frodoAdminToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcmdvY2QiLCJzdWIiOiJmcm9kb0FkbWluOmFwaUtleSIsIm5iZiI6MTY4OTIyNTAwMSwiaWF0IjoxNjg5MjI1MDAxLCJqdGkiOiI4MzdjNjBhYS0zYjUxLTQzYmItYTI4MC0yZGI5MDUyOTA1MjEifQ.G1C8bJq6VnxNaPDKaOT6celQ2YnWmomT13a9iDfxhPc"
 
-// final def frodoAdminToken = params.frodoAdminToken
 final String projectName = params.projectName
 final String helmChartRepositoryUrl = params.helmChartRepositoryUrl
 final String helmChartBranch = params.helmChartBranch
 final String helmChartPath = params.helmChartPath
-final String imagePath = params.imagePath
+// final String imagePath = params.imagePath
 final String imageTag = params.imageTag
 
 
@@ -31,7 +30,7 @@ podTemplate(
     ]
 ) {
     node("jenkins-agent-argocd") {
-        stage("create argocd project") {
+        stage("modify argocd application") {
             container("argocd") {
                 withCredentials([
                     string(
@@ -39,11 +38,12 @@ podTemplate(
                         variable: "token"
                     )
                 ]) {
-                    sh(getArgocdProjCreateCommand() + ' --auth-token=$token')
+                    sh(getArgocdAppModifyCommand() + ' --auth-token=$token')
                 }
             }
         }
-        stage("create argocd application") {
+
+        stage("sync argocd application") {
             container("argocd") {
                 withCredentials([
                     string(
@@ -51,32 +51,26 @@ podTemplate(
                         variable: "token"
                     )
                 ]) {
-                    sh(getArgocdAppCreateCommand() + ' --auth-token=$token')
+                    sh(getArgocdAppSyncCommand() + ' --auth-token=$token')
                 }
             }
         }
     }
 }
 
-def getArgocdAppCreateCommand() {
-    return """argocd app create ${projectName} \\
+def getArgocdAppModifyCommand() {
+    return """argocd app set ${projectName} \\
 --plaintext \\
 --server argo-cd-argocd-server.argo-cd.svc.cluster.local \\
 --repo ${helmChartRepositoryUrl} \\
 --revision ${helmChartBranch} \\
 --path ${helmChartPath} \\
---project ${projectName} \\
---dest-namespace ${projectName} \\
---dest-server https://kubernetes.default.svc \\
---sync-option CreateNamespace=true \\
---sync-policy none \\
---helm-set image.repository=${imagePath} \\
 --helm-set image.tag=${imageTag}"""
 }
 
-def getArgocdProjCreateCommand() {
-    return """argocd proj create ${projectName} \\
+def getArgocdAppSyncCommand() {
+    return """argocd app sync ${projectName} \\
 --plaintext \\
 --server argo-cd-argocd-server.argo-cd.svc.cluster.local \\
---description \"frodo 에서 생성한 project 입니다.\""""
+--prune"""
 }
