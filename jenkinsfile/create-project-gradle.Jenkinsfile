@@ -4,7 +4,7 @@ final Integer instanceCap = 5
 println(scm.userRemoteConfigs[0].url)
 println(scm.userRemoteConfigs[0].credentialsId)
 println(scm)
-println(scm.branched[0])
+println(scm.branches[0])
 
 // final String frodoRepositoryUrl = frodoRepositoryUrl
 // final String frodoBranch = frodoBranch
