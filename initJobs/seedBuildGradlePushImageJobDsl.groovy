@@ -1,3 +1,7 @@
+final String frodoRepositoryUrl = scm.userRemoteConfigs[0].url
+final String frodoBranch = scm.branches[0]
+final String frodoRepositoryCredential = scm.userRemoteConfigs[0].credentialsId
+
 job("frodo.managed.seed.build-gradle-push-image") {
     description("frodo 를 위한 build gradle push image job 을 생성해주는 seed job 입니다.")
     parameters {
