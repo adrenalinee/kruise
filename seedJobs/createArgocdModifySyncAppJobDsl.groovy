@@ -13,23 +13,23 @@ if (imagePath == "") {
 
 pipelineJob("${projectName}.pipeline.${projectRepositoryBranch}.modify-sync-argocd-app") {
     parameters {
-//        credentialsParam("frodoRepositoryCredential") {
-//            type("com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl")
-//            defaultValue(frodoRepositoryCredential)
-//            description("빌드 스크립트를 다운받을때 사용할 인증 token 을 지정하세요.")
-//        }
-//        stringParam {
-//            name("frodoRepositoryUrl")
-//            defaultValue(frodoRepositoryUrl)
-//            description("빌드 스크립트를 가져올 git 주소입니다.")
-//            trim(true)
-//        }
-//        stringParam {
-//            name("frodoBranch")
-//            defaultValue(frodoBranch)
-//            description("빌드 스크립트를 가져올 branch 입니다.")
-//            trim(true)
-//        }
+        credentialsParam("frodoRepositoryCredential") {
+            type("com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl")
+            defaultValue(frodoRepositoryCredential)
+            description("빌드 스크립트를 다운받을때 사용할 인증 token 을 지정하세요.")
+        }
+        stringParam {
+            name("frodoRepositoryUrl")
+            defaultValue(frodoRepositoryUrl)
+            description("빌드 스크립트를 가져올 git 주소입니다.")
+            trim(true)
+        }
+        stringParam {
+            name("frodoBranch")
+            defaultValue(frodoBranch)
+            description("빌드 스크립트를 가져올 branch 입니다.")
+            trim(true)
+        }
         stringParam {
             name("projectName")
             defaultValue(projectName)
