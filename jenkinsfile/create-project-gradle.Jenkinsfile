@@ -1,6 +1,10 @@
 final Integer idleMinutes = 60
 final Integer instanceCap = 5
 
+final String frodoRepositoryUrl = frodoRepositoryUrl
+final String frodoBranch = frodoBranch
+final String frodoRepositoryCredential = frodoRepositoryCredential
+
 final String projectName = params.projectName
 final String projectRepositoryUrl = params.projectRepositoryUrl
 final String projectRepositoryBranch = params.projectRepositoryBranch
