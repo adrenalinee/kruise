@@ -23,7 +23,8 @@ if (jdkVersion == 17) {
 }
 
 final String containerRegistryAddr = imagePath.substring(0, imagePath.indexOf("/"))
-final String imageTag
+String imageTag
+String imagePathTag
 
 
 println("[FRODO] job parameters: ${params}")
@@ -94,9 +95,10 @@ podTemplate(
 
             final String shortCommitId = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
             imageTag = createTagName(shortCommitId)
+            imagePathTag = "${imagePath}:${imageTag}"
 
             container("podman") {
-                sh("podman build -t ${imagePath}:${imageTag} .")
+                sh("podman build -t ${imagePathTag} .")
                 sh("podman images")
             }
         }
