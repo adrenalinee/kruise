@@ -129,7 +129,7 @@ podTemplate(
 
         stage("modify and sync argocd application") {
             build(
-                job: "${projectName}.pipeline.${projectRepositoryBranch}.modify-sync-argocd-app",
+                job: "${projectName}.pipeline.${branch}.modify-sync-argocd-app",
                 wait: true,
                 parameters: [
                     string(name: "projectName", value: projectName),
