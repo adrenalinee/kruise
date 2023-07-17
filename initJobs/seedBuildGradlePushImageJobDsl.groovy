@@ -1,9 +1,3 @@
-final String frodoRepositoryUrl = scm.userRemoteConfigs[0].url
-final String frodoBranch = scm.branches[0]
-final String frodoRepositoryCredential = scm.userRemoteConfigs[0].credentialsId
-
-println(frodoRepositoryUrl)
-
 job("frodo.managed.seed.build-gradle-push-image") {
     description("frodo 를 위한 build gradle push image job 을 생성해주는 seed job 입니다.")
     parameters {
@@ -24,6 +18,24 @@ job("frodo.managed.seed.build-gradle-push-image") {
 //            description("빌드 스크립트를 가져올 branch 입니다.")
 //            trim(true)
 //        }
+        string("frodoRepositoryCredential") {
+//            type("com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl")
+            defaultValue(frodoRepositoryCredential)
+            description("빌드 스크립트를 다운받을때 사용할 인증 token 을 지정하세요.")
+        }
+        string {
+            name("frodoRepositoryUrl")
+            defaultValue(frodoRepositoryUrl)
+            description("빌드 스크립트를 가져올 git 주소입니다.")
+            trim(true)
+        }
+        string {
+            name("frodoBranch")
+            defaultValue(frodoBranch)
+            description("빌드 스크립트를 가져올 branch 입니다.")
+            trim(true)
+        }
+
         stringParam {
             name("projectName")
             defaultValue("hello-world")
