@@ -80,5 +80,5 @@ def getArgocdProjCreateCommand() {
 --server argo-cd-argocd-server.argo-cd.svc.cluster.local \
 --description "frodo 에서 생성한 project 입니다." \
 --dest *,* \
---src *""""
+--src *"""
 }
