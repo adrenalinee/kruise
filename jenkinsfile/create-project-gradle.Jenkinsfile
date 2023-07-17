@@ -1,14 +1,14 @@
 final Integer idleMinutes = 60
 final Integer instanceCap = 5
 
-println(scm.userRemoteConfigs[0].url)
-println(scm.userRemoteConfigs[0].credentialsId)
-println(scm)
-println(scm.branches[0])
+// println(scm.userRemoteConfigs[0].url)
+// println(scm.userRemoteConfigs[0].credentialsId)
+// println(scm)
+// println(scm.branches[0])
 
-// final String frodoRepositoryUrl = frodoRepositoryUrl
-// final String frodoBranch = frodoBranch
-// final String frodoRepositoryCredential = frodoRepositoryCredential
+// final String frodoRepositoryUrl = scm.userRemoteConfigs[0].url
+// final String frodoBranch = scm.branches[0]
+// final String frodoRepositoryCredential = scm.userRemoteConfigs[0].credentialsId
 
 final String projectName = params.projectName
 final String projectRepositoryUrl = params.projectRepositoryUrl
