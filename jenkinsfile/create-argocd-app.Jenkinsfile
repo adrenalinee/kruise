@@ -1,4 +1,4 @@
-final String argocdImage = "docker.io/bitnami/argo-cd:2.7.7"
+final String argocdImage = "docker.io/bitnami/argo-cd:2.9.2"
 
 final Integer idleMinutes = 60
 final Integer instanceCap = 5
