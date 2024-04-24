@@ -22,6 +22,11 @@ helm repo index .
 
 
 # 유용한 커멘드
+argocd inital admin password
+```shell
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+```
+
 argocd login
 ```shell
 argocd login localhost:9000 --skip-test-tls --username admin --password xxx
