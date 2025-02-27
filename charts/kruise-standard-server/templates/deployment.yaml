@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "kruise-standard-server.name" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "kruise-standard-server.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "kruise-standard-server.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "kruise-standard-server.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- if .Values.filebeat.enabled }}
+      volumes:
+        - name: {{ include "kruise-standard-server.name" . }}-log
+          emptyDir: { }
+        - name: {{ include "kruise-standard-server.name" . }}-filebeat-config
+          configMap:
+            name: {{ include "kruise-standard-server.name" . }}-filebeat-config
+      {{- end}}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "kruise-standard-server.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        {{- if .Values.filebeat.enabled }}
+        - name: {{ include "kruise-standard-server.name" . }}-filebeat
+          image: "{{ .Values.filebeat.image.repository }}:{{ .Values.image.tag }}"
+          volumeMounts:
+            - name: {{ include "kruise-standard-server.name" . }}-log
+              mountPath: {{ .Values.filebeat.logFilePath }}
+            - name: {{ include "kruise-standard-server.name" . }}-filebeat-config
+              mountPath: /usr/share/filebeat/filebeat.yml
+              subPath: filebeat.yml
+        {{- end}}
+        - name: {{ include "kruise-standard-server.name" . }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.filebeat.enabled }}
+          volumeMounts:
+            - name: {{ include "kruise-standard-server.name" . }}-log
+              mountPath: {{ .Values.filebeat.logFilePath }}
+          {{- end}}
+          env:
+{{/*            - name: SPRING_PROFILES_ACTIVE*/}}
+{{/*              value: {{ .Values.spring.activeProfiles }}*/}}
+          {{- range $key, $value := .Values.containerEnv }}
+            - name: {{ $key | quote }}
+              value: {{ $value | quote }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.livenessProbe.path }}
+              port: {{ .Values.livenessProbe.port }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.readinessProbe.path }}
+              port: {{ .Values.readinessProbe.port }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

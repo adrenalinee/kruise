@@ -1,14 +1,34 @@
 apiVersion: v1
 entries:
-  frodo-standard-server:
+  kruise-standard-server:
   - apiVersion: v2
-    created: "2023-07-09T22:43:38.841917+09:00"
+    created: "2024-12-06T17:47:05.27591+09:00"
     description: A Helm chart for Kubernetes
-    digest: 720c788ff7521310fc27b9914d1109b0ae6aab36eac731f77385f7c88505330a
+    digest: ac9ab23d945f5542ee63841bfb023e15cc1fae12c518494c68bdf23e6d33a827
     icon: https://spring.io/img/logos/spring-initializr.svg
-    name: frodo-standard-server
+    name: kruise-standard-server
     type: application
     urls:
-    - packages/frodo-standard-server-0.1.0.tgz
+    - package/kruise-standard-server-0.3.0.tgz
+    version: 0.3.0
+  - apiVersion: v2
+    created: "2024-12-06T17:47:05.26482+09:00"
+    description: A Helm chart for Kubernetes
+    digest: db86e9611ebaa5ced119a5fd46a6ec37fa9a0b857ea3659d86b51eb65e17e2cc
+    icon: https://spring.io/img/logos/spring-initializr.svg
+    name: kruise-standard-server
+    type: application
+    urls:
+    - package/kruise-standard-server-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
+    created: "2024-12-06T17:47:05.264078+09:00"
+    description: A Helm chart for Kubernetes
+    digest: 6eb30f4a9ec06be56b8ada45d4b485131898e511ff3c0f8ed196e63bcc5a1c6b
+    icon: https://spring.io/img/logos/spring-initializr.svg
+    name: kruise-standard-server
+    type: application
+    urls:
+    - package/kruise-standard-server-0.1.0.tgz
     version: 0.1.0
-generated: "2023-07-09T22:43:38.841486+09:00"
+generated: "2024-12-06T17:47:05.260936+09:00"

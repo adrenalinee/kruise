@@ -1,15 +1,10 @@
 configs:
-  rbac:
-    policy.default: role:readonly
-    policy.csv: |-
-      p, role:frodo-admin, applications, *, */*, allow
-      p, role:frodo-admin, applicationsets, *, */*, allow
-      p, role:frodo-admin, clusters, *, *, allow
-      p, role:frodo-admin, repositories, *, *, allow
-      p, role:frodo-admin, projects, *, *, allow
-      g, frodoAdmin, role:frodo-admin
   cm:
-    accounts.frodoAdmin: apiKey
+    create: true
+    accounts.kruise-admin: apiKey
     users.anonymous.enabled: true
-  params:
-    server.insecure: true
+  rbac:
+    create: true
+    policy.default: role:readonly
+    policy.csv: |
+      g, kruise-admin, role:admin
