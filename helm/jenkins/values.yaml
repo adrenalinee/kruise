@@ -10,10 +10,8 @@ agent:
       cpu:
       memory:
 controller:
-  sidecars:
-    configAutoReload:
-      enabled: false
   installPlugins:
+#    - trilead-api:2.147.vb_73cc728a_32e
     - workflow-aggregator
     - ldap
     - job-dsl
@@ -34,11 +32,13 @@ controller:
     - kubernetes-cli
     - authorize-project
     - build-user-vars-plugin
+#  initializeOnce: true
+
   JCasC:
     configScripts:
       welcome-message: |-
         jenkins:
-          systemMessage: "frodo 가 관리하는 jenkins 입니다."
+          systemMessage: welcome to kruise jenkins
       authorization: |-
         security:
           scriptApproval:
@@ -68,39 +68,54 @@ controller:
       seed-jobs: |-
         jobs:
           - script: >
-              job("frodo.init") {
-                description("frodo 에서 사용할 seed job 을 생성합니다.")
+              pipelineJob("kruise.init") {
+                description("kruise 에서 사용할 seed job 을 생성합니다.")
                 parameters {
-                  credentialsParam("frodoRepositoryCredential") {
+                  credentialsParam("kruiseRepositoryCredential") {
                     type("com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl")
-                    description("빌드 스크립트를 다운받을때 사용할 인증 token 을 지정하세요.")
+                    description("빌드 스크립트를 다운받을때 사용할 인증 token 을 지정하세요. 모든 job 이 실행될때 인증을 시도 합니다. ex: github -> settings -> developer settings -> personal access tokens 발급.")
+                  }
+                  credentialsParam("containerRegistryCredential") {
+                    type("com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl")
+                    description("containerRegistry 인증용 계정을 지정하세요.")
+                  }
+                  credentialsParam("argocdCredential") {
+                    type("org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl")
+                    description("argocd 관리자 계정(kruise-admin)의 인증 토큰 을 지정하세요. ex: kruise 에서 설치한 argocd 에 'admin' 계정으로 로그인(초기 비밀번호는 secret 에서 확인)  후에 'kruise-admin' 계정의 token 발급.")
                   }
                   stringParam {
-                    name("frodoRepositoryUrl")
-                    defaultValue("https://github.com/adrenalinee/frodo.git")
+                    name("kruiseRepositoryUrl")
+                    defaultValue("https://github.com/adrenalinee/kruise.git")
                     description("빌드 스크립트를 가져올 git 주소입니다.")
                     trim(true)
                   }
                   stringParam {
-                    name("frodoBranch")
-                    defaultValue("master")
+                    name("kruiseBranch")
+                    defaultValue("main")
                     description("빌드 스크립트를 가져올 branch 입니다.")
                     trim(true)
                   }
                 }
-                scm {
-                  git {
-                    branch('$frodoBranch')
-                    remote {
-                      credentials('$frodoRepositoryCredential')
-                      url('$frodoRepositoryUrl')
-                    }
+                definition {
+                  cps {
+                    sandbox(true)
+                    script(
+              """
+              final String kruiseRepositoryUrl = params.kruiseRepositoryUrl;
+              final String kruiseBranch = params.kruiseBranch;
+              podTemplate(
+                inheritFrom: 'jenkins-agent-default',
+              ) {
+                node(POD_LABEL) {
+                  stage("Checkout kruise") {
+                    git(url: kruiseRepositoryUrl, branch: kruiseBranch, credentialsId: kruiseRepositoryCredential)
+                  }
+                  stage('Run jobDsl') {
+                    jobDsl(sandbox: true, targets: 'initJobs/**_JobDsl.groovy')
                   }
                 }
-                steps {
-                  jobDsl {
-                    targets("initJobs/**.groovy")
-                    sandbox(true)
+              }"""
+                    )
                   }
                 }
               }
