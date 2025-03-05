@@ -134,7 +134,7 @@ containerEnv.SPRING_PROFILES_ACTIVE=dev""")
                         credentials(kruiseRepositoryCredential)
                     }
                     branch(kruiseBranch)
-                    scriptPath("initJobs/actionCreateProjectGradle.Jenkinsfile")
+                    scriptPath("initJobs/managedBuildAndPush.Jenkinsfile")
                 }
             }
         }

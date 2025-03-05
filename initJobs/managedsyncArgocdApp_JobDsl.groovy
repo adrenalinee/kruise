@@ -1,4 +1,4 @@
-pipelineJob("kruise.managed.modify-argocd-app-and-sync") {
+pipelineJob("kruise.managed.sync-argocd-app") {
     parameters {
         stringParam {
             name("argocdApplicationName")
