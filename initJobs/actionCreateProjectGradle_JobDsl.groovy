@@ -65,7 +65,7 @@ containerEnv.SPRING_PROFILES_ACTIVE=dev""")
             description("build 를 진행할 jdk 의 버전을 지정합니다.")
         }
         textParam {
-            name("buildCommand")
+            name("gradleBuildCommand")
             defaultValue("build")
         }
         stringParam {
