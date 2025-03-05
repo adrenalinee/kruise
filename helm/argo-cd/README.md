@@ -1,7 +1,7 @@
 # argo-cd
 
 chart: https://artifacthub.io/packages/helm/argo/argo-cd
-chart version: 7.7.14 (argo-cd version: v2.13.3)
+(argo-cd version: v2.14.2)
 
 # command
 아래 command 에서 ingress host name 을 알맞게 변경해서 사용.
@@ -15,11 +15,9 @@ helm repo update
 helm upgrade kruise-argocd argo/argo-cd \
   --install \
   --values values.yaml \
-  --set 'global.domain=xxx' \
-  --set 'server.ingress.hostname=xxx' \
   --namespace kruise-argocd \
   --create-namespace \
-  --version 7.7.14
+  --version 7.8.5
 ```
 
 

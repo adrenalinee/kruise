@@ -70,7 +70,7 @@ def getArgocdAppModifyCommand(String argocdToken, String argocdServer) {
  */
 def getArgocdAppSyncCommand(String argocdToken, String argocdServer) {
     return """argocd app sync $argocdApplicationName \
---plaintext \
+--insecure \
 --server ${argocdServer} \
 --prune \
 --auth-token ${argocdToken}"""
@@ -81,7 +81,7 @@ def getArgocdAppSyncCommand(String argocdToken, String argocdServer) {
  */
 def getArgocdAppWaitCommand(String argocdToken, String argocdServer) {
     return """argocd app wait $argocdApplicationName \
---plaintext \
+--insecure \
 --server ${argocdServer} \
 --auth-token ${argocdToken}"""
 }
