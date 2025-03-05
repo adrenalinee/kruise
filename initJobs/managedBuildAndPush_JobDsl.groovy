@@ -1,20 +1,3 @@
-if (clusterName == "") {
-    error("[kruise] clusterName 은 필수값입니다.")
-}
-if (projectName == "") {
-    error("[kruise] projectName 은 필수값입니다.")
-}
-if (projectRepositoryUrl == "") {
-    error("[kruise] projectRepositoryUrl 은 필수값입니다.")
-}
-if (projectRepositoryBranch == "") {
-    error("[kruise] projectRepositoryBranch 은 필수값입니다.")
-}
-if (imagePath == "") {
-    error("[kruise] imagePath 는 팔수값입니다.")
-}
-
-
 pipelineJob("kruise.managed.build-and-push") {
     description("gradle build 후에 image build and push 하는 seed job 을 생성합니다.")
     parameters {
