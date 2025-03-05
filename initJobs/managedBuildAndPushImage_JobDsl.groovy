@@ -1,25 +1,3 @@
-if (clusterName == "") {
-    error("[kruise] clusterName 은 필수값입니다.")
-}
-if (projectName == "") {
-    error("[kruise] projectName 은 필수값입니다.")
-}
-if (projectRepositoryUrl == "") {
-    error("[kruise] projectRepositoryUrl 은 필수값입니다.")
-}
-if (projectRepositoryBranch == "") {
-    error("[kruise] projectRepositoryBranch 은 필수값입니다.")
-}
-if (imagePath == "") {
-    error("[kruise] imagePath 는 팔수값입니다.")
-}
-
-final String fixedBranchName = projectRepositoryBranch.replace("/", "-").toLowerCase()
-final String fixedPhase = phase == "" ? "" : "-${phase}"
-final def releaseName = "${projectName}${fixedPhase}"
-final def argocdApplicationName = "${releaseName}-${clusterName}-${fixedBranchName}"
-//final def jobName = "${projectName}${phase == "" ? "" : ".${phase}"}.${clusterName}.${fixedBranchName}.build-plain-push-image"
-
 pipelineJob("kruise.managed.build-and-push-image") {
     parameters {
         stringParam {
