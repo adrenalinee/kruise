@@ -1,4 +1,4 @@
-pipelineJob("kruise.managed.modify-argocd-app-and-sync") {
+pipelineJob("kruise.managed.modify-argocd-app") {
     parameters {
         stringParam {
             name("argocdApplicationName")
@@ -25,7 +25,7 @@ pipelineJob("kruise.managed.modify-argocd-app-and-sync") {
                         credentials(kruiseRepositoryCredential)
                     }
                     branch(kruiseBranch)
-                    scriptPath("initJobs/managedModifyArgocdAppAndSync.Jenkinsfile")
+                    scriptPath("initJobs/managedModifyArgocdApp.Jenkinsfile")
                 }
             }
         }

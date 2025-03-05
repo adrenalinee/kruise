@@ -7,7 +7,6 @@ final Integer instanceCap = 5
 
 final def argocdCredential = params.argocdCredential
 final String argocdApplicationName = params.argocdApplicationName
-final String imageTag = params.imageTag
 
 println("[kruise] job parameters: ${params}")
 
@@ -29,22 +28,12 @@ podTemplate(
     ]
 ) {
     node("jenkins-agent-argocd") {
-        stage("modify argocd application imageTag") {
-            container("argocd") {
-                withCredentials([string(
-                        credentialsId: argocdCredential,
-                        variable: 'argocdToken'
-                )]) {
-                    sh(getArgocdAppModifyCommand('$argocdToken', argocdServer))
-                }
-            }
-        }
 
         stage("sync argocd application") {
             container("argocd") {
                 withCredentials([string(
-                        credentialsId: argocdCredential,
-                        variable: 'argocdToken'
+                    credentialsId: argocdCredential,
+                    variable: 'argocdToken'
                 )]) {
                     sh(getArgocdAppSyncCommand('$argocdToken', argocdServer))
                     sh(getArgocdAppWaitCommand('$argocdToken', argocdServer))
@@ -52,17 +41,6 @@ podTemplate(
             }
         }
     }
-}
-
-/**
- * spec: https://argo-cd.readthedocs.io/en/stable/user-guide/commands/argocd_app_set
- */
-def getArgocdAppModifyCommand(String argocdToken, String argocdServer) {
-    return """argocd app set $argocdApplicationName \
---insecure \
---server ${argocdServer} \
---helm-set image.tag=$imageTag \
---auth-token ${argocdToken}"""
 }
 
 /**

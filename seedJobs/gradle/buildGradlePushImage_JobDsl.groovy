@@ -22,10 +22,6 @@ final def releaseName = "${projectName}${fixedPhase}"
 final def argocdApplicationName = "${releaseName}-${clusterName}-${fixedBranchName}"
 final def jobName = "${projectName}${phase == "" ? "" : ".${phase}"}.${clusterName}.${fixedBranchName}.build-gradle-push-image"
 
-//final String fixedBranchName = projectRepositoryBranch.replace("/", "-").toLowerCase()
-//final def jobName = "${projectName}.action.${clusterName}.${fixedBranchName}${phase == "" ? "" : ".${phase}"}.build-gradle-push-image"
-//final def argocdApplicationName = "${projectName}-${clusterName}-${fixedBranchName}${phase == "" ? "" : "-${phase}"}"
-
 pipelineJob(jobName) {
     parameters {
         stringParam {
