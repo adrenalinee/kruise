@@ -59,7 +59,7 @@ podTemplate(
  */
 def getArgocdAppModifyCommand(String argocdToken, String argocdServer) {
     return """argocd app set $argocdApplicationName \
---plaintext \
+--insecure \
 --server ${argocdServer} \
 --helm-set image.tag=$imageTag \
 --auth-token ${argocdToken}"""
