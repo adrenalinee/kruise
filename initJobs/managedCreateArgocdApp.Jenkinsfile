@@ -79,7 +79,7 @@ def getArgocdAppCreateCommand(String argocdToken, String argocdServer, Boolean o
     }
 
     for (String line: helmChartValues.split("\n")) {
-        if (line.trip() == '') {
+        if (line.trim() == '') {
             continue
         }
 
