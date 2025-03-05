@@ -23,7 +23,6 @@ final String fixedPhase = phase == "" ? "" : "-${phase}"
 final def releaseName = "${projectName}${fixedPhase}"
 final def argocdApplicationName = "${releaseName}-${clusterName}-${fixedBranchName}"
 
-
 println("[kruise] job parameters: ${params}")
 
 //validation ----
@@ -50,7 +49,6 @@ if (projectRepositoryBranch == "") {
 if (imagePath == "") {
     error("[kruise] imagePath 은 필수값입니다.")
 }
-
 
 podTemplate(
     inheritFrom: 'jenkins-agent-default',
