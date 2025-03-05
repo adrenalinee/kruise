@@ -2,6 +2,10 @@
 pipelineJob("kruise.action.create-project-gradle") {
     description("gradle build 후에 image build and push 하는 seed job 을 생성합니다.")
     parameters {
+        credentialsParam("projectRepositoryCredential") {
+            type("com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl")
+            description("project repository 인증용 계정 을 지정하세요.")
+        }
         stringParam {
             name("projectName")
             description("생성 할 프로젝트 이름입니다. 다른 프로젝트와 이름이 겹치지 않게 주의해주세요. 덮어쓰기가 될 수 있습니다. ex: hello-world")
@@ -81,11 +85,11 @@ containerEnv.SPRING_PROFILES_ACTIVE=dev""")
             trim(true)
         }
 
-        credentialsParam("projectRepositoryCredential") {
-            type("com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl")
-            defaultValue(kruiseRepositoryCredential)
-            description("project repository 인증용 계정 을 지정하세요.")
-        }
+//        credentialsParam("projectRepositoryCredential") {
+//            type("com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl")
+////            defaultValue(kruiseRepositoryCredential)
+//            description("project repository 인증용 계정 을 지정하세요.")
+//        }
         credentialsParam("containerRegistryCredential") {
             type("com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl")
             defaultValue(containerRegistryCredential)

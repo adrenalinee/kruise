@@ -32,7 +32,7 @@ pipelineJob("kruise.managed.build-and-push-image") {
         }
         credentialsParam("projectRepositoryCredential") {
             type("com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl")
-            defaultValue(projectRepositoryCredential)
+//            defaultValue(projectRepositoryCredential)
             description("project repository 인증용 계정 을 지정하세요.")
         }
         credentialsParam("containerRegistryCredential") {
