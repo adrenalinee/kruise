@@ -82,7 +82,7 @@ podTemplate(
             git(url: projectRepositoryUrl, branch: projectRepositoryBranch, credentialsId: projectRepositoryCredential)
         }
 
-        stage("Build container image") {
+        stage("Build image") {
             echo(readFile("Dockerfile"))
 
             final String shortCommitId = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
@@ -95,7 +95,7 @@ podTemplate(
             }
         }
 
-        stage("Push container image") {
+        stage("Push image") {
             container("podman") {
                 try {
                     withCredentials([

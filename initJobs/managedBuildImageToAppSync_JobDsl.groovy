@@ -1,5 +1,9 @@
-pipelineJob("kruise.managed.build-and-push-image") {
+pipelineJob("kruise.managed.build-image-to-app-sync") {
     parameters {
+        credentialsParam("projectRepositoryCredential") {
+            type("com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl")
+            description("project repository 인증용 계정 을 지정하세요.")
+        }
         stringParam {
             name("argocdApplicationName")
             description("kruise project 생성과정에서 argocd 에 생성된 application 이름입니다. argocd application 수정/싱크 동작을 위해 필요합니다.")
@@ -30,11 +34,6 @@ pipelineJob("kruise.managed.build-and-push-image") {
             description("proxy 서버를 사용하지 않을 주소(도메인, ip) 목록입니다. 여러개의 주소는 ','  로 구별합니다.")
             trim(true)
         }
-        credentialsParam("projectRepositoryCredential") {
-            type("com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl")
-//            defaultValue(projectRepositoryCredential)
-            description("project repository 인증용 계정 을 지정하세요.")
-        }
         credentialsParam("containerRegistryCredential") {
             type("com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl")
             defaultValue(containerRegistryCredential)
@@ -50,7 +49,7 @@ pipelineJob("kruise.managed.build-and-push-image") {
                         credentials(kruiseRepositoryCredential)
                     }
                     branch(kruiseBranch)
-                    scriptPath("initJobs/managedBuildAndPushImage.Jenkinsfile")
+                    scriptPath("initJobs/managedBuildImageToAppSync.Jenkinsfile")
                 }
             }
         }

@@ -75,11 +75,6 @@ service.port=3000
             trim(true)
         }
 
-//        credentialsParam("projectRepositoryCredential") {
-//            type("com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl")
-////            defaultValue(kruiseRepositoryCredential)
-//            description("project repository 인증용 계정 을 지정하세요.")
-//        }
         credentialsParam("containerRegistryCredential") {
             type("com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl")
             defaultValue(containerRegistryCredential)
