@@ -1,7 +1,7 @@
 # jenkins
 
 chart: https://artifacthub.io/packages/helm/jenkinsci/jenkins
-chart version: 5.7.12 (jenkins version: 2.479.1)
+(jenkins version: 2.492.1)
 
 # pre required
 ## github  oauth app 생성
@@ -19,12 +19,9 @@ helm repo update
 helm upgrade kruise-jenkins jenkins/jenkins \
   --install \
   --values values.yaml \
-  --values kc-security-realm.yaml \
-  --set 'controller.ingress.hostName=xxx' \
-  --set 'controller.jenkinsUrl=http://xxx' \
   --namespace kruise-jenkins \
   --create-namespace \
-  --version 5.7.12
+  --version 5.8.17
 ```
 
 # 설치후 최초에 해줘야 할것

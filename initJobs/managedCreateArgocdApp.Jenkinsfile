@@ -61,7 +61,7 @@ podTemplate(
 def getArgocdAppCreateCommand(String argocdToken, String argocdServer, Boolean override) {
     def command = """argocd app create ${argocdApplicationName} \
 --label creator=kruise \
---plaintext \
+--insecure \
 --server ${argocdServer} \
 --repo ${kruiseRepositoryUrl} \
 --revision ${kruiseBranch} \
@@ -91,7 +91,7 @@ def getArgocdAppCreateCommand(String argocdToken, String argocdServer, Boolean o
  */
 def getArgocdProjCreateCommand(String argocdToken, argocdServer) {
     return """argocd proj create ${argocdProjectName} \
---plaintext \
+--insecure \
 --server ${argocdServer} \
 --description "kruise 에서 생성한 project 입니다." \
 --upsert \
