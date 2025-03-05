@@ -122,13 +122,23 @@ podTemplate(
             }
         }
 
-        stage("Execute modify-sync-argocd-app job") {
+        stage("Execute modify-argocd-app job") {
             build(
                 job: "kruise.managed.modify-argocd-app-and-sync",
                 wait: true,
                 parameters: [
                     string(name: "argocdApplicationName", value: argocdApplicationName),
                     string(name: "imageTag", value: imageTag)
+                ]
+            )
+        }
+
+        stage("Execute sync-argocd-app job") {
+            build(
+                job: "kruise.managed.modify-argocd-app-and-sync",
+                wait: true,
+                parameters: [
+                    string(name: "argocdApplicationName", value: argocdApplicationName)
                 ]
             )
         }

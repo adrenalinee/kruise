@@ -1,5 +1,3 @@
-package gradle
-
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -25,8 +23,10 @@ final String argocdApplicationName = params.argocdApplicationName
 String selectedJdkImage
 if (jdkVersion == 17) {
     selectedJdkImage = jdk17Image
-} else {
+} else if (jdkVersion == 21) {
     selectedJdkImage = jdk21Image
+} else {
+    throw RuntimeException("정의되지 않은 jdk 버전입니다. jdkVersion: ${jdkVersion}")
 }
 
 final String containerRegistryAddr = imagePath.substring(0, imagePath.indexOf("/"))

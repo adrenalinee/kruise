@@ -1,5 +1,21 @@
-//gradle 기반 build project 생성
-pipelineJob("kruise.action.create-project-gradle") {
+if (clusterName == "") {
+    error("[kruise] clusterName 은 필수값입니다.")
+}
+if (projectName == "") {
+    error("[kruise] projectName 은 필수값입니다.")
+}
+if (projectRepositoryUrl == "") {
+    error("[kruise] projectRepositoryUrl 은 필수값입니다.")
+}
+if (projectRepositoryBranch == "") {
+    error("[kruise] projectRepositoryBranch 은 필수값입니다.")
+}
+if (imagePath == "") {
+    error("[kruise] imagePath 는 팔수값입니다.")
+}
+
+
+pipelineJob("kruise.managed.build-and-push") {
     description("gradle build 후에 image build and push 하는 seed job 을 생성합니다.")
     parameters {
         stringParam {
@@ -65,7 +81,7 @@ containerEnv.SPRING_PROFILES_ACTIVE=dev""")
             description("build 를 진행할 jdk 의 버전을 지정합니다.")
         }
         textParam {
-            name("buildCommand")
+            name("gradleBuildCommand")
             defaultValue("build")
         }
         stringParam {
