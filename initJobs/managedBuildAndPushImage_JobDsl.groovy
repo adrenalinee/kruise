@@ -1,5 +1,3 @@
-package gradle
-
 if (clusterName == "") {
     error("[kruise] clusterName 은 필수값입니다.")
 }
@@ -20,9 +18,9 @@ final String fixedBranchName = projectRepositoryBranch.replace("/", "-").toLower
 final String fixedPhase = phase == "" ? "" : "-${phase}"
 final def releaseName = "${projectName}${fixedPhase}"
 final def argocdApplicationName = "${releaseName}-${clusterName}-${fixedBranchName}"
-final def jobName = "${projectName}${phase == "" ? "" : ".${phase}"}.${clusterName}.${fixedBranchName}.build-gradle-push-image"
+//final def jobName = "${projectName}${phase == "" ? "" : ".${phase}"}.${clusterName}.${fixedBranchName}.build-plain-push-image"
 
-pipelineJob(jobName) {
+pipelineJob("kruise.managed.build-and-push-image") {
     parameters {
         stringParam {
             name("argocdApplicationName")
@@ -45,17 +43,8 @@ pipelineJob(jobName) {
         stringParam {
             name("imagePath")
             defaultValue(imagePath)
-            description("pushImage = true 일 경우에 필수값입니다. image push 할 주소 입니다. 프로토콜을 제외한 경로 입니다. ex) domain/owner/repo")
+            description("image push 할 주소 입니다. 프로토콜을 제외한 경로 입니다. ex) domain/owner/repo")
             trim(true)
-        }
-        stringParam {
-            name("jdkVersion")
-            defaultValue(jdkVersion)
-            description("build 를 진행할 jdk 의 버전을 지정합니다.")
-        }
-        textParam {
-            name("gradleBuildCommand")
-            defaultValue(gradleBuildCommand)
         }
         stringParam {
             name("proxy")
@@ -89,7 +78,7 @@ pipelineJob(jobName) {
                         credentials(kruiseRepositoryCredential)
                     }
                     branch(kruiseBranch)
-                    scriptPath("seedJobs/gradle/buildGradlePushImage.Jenkinsfile")
+                    scriptPath("initJobs/managedBuildAndPushImage.Jenkinsfile")
                 }
             }
         }

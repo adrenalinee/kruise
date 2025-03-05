@@ -2,32 +2,20 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 final String podmanImage = "quay.io/podman/stable:v5.3.2"
-final String jdk17Image = "docker.io/eclipse-temurin:17.0.14_7-jdk-noble"
-final String jdk21Image = "docker.io/eclipse-temurin:21.0.6_7-jdk-noble"
 final Integer idleMinutes = 480 //8시간
 final Integer instanceCap = 5
 
 final String projectRepositoryUrl = params.projectRepositoryUrl
 final String projectRepositoryBranch = params.projectRepositoryBranch
 
-final String gradleBuildCommand = params.gradleBuildCommand
-final Integer jdkVersion = params.jdkVersion.toInteger()
 final String imagePath = params.imagePath
+
 final String proxy = params.proxy
 final String noProxy = params.noProxy
 
 final def containerRegistryCredential = params.containerRegistryCredential
 final def projectRepositoryCredential = params.projectRepositoryCredential
 final String argocdApplicationName = params.argocdApplicationName
-
-String selectedJdkImage
-if (jdkVersion == 17) {
-    selectedJdkImage = jdk17Image
-} else if (jdkVersion == 21) {
-    selectedJdkImage = jdk21Image
-} else {
-    throw RuntimeException("정의되지 않은 jdk 버전입니다. jdkVersion: ${jdkVersion}")
-}
 
 final String containerRegistryAddr = imagePath.substring(0, imagePath.indexOf("/"))
 String imageTag
@@ -46,10 +34,6 @@ if (projectRepositoryUrl == "") {
 
 if (projectRepositoryBranch == "") {
     error("[kruise] branch 은 필수값입니다.")
-}
-
-if (jdkVersion == "") {
-    error("[kruise] jdkVersion 은 필수값입니다.")
 }
 
 if (imagePath == "") {
@@ -77,19 +61,13 @@ if (noProxy != null) {
 
 podTemplate(
     inheritFrom: 'jenkins-agent-default',
-    name: "jenkins-agent-jdk${jdkVersion}-podman",
-    label: "jenkins-agent-jdk${jdkVersion}-podman",
+    name: "jenkins-agent-podman",
+    label: "jenkins-agent-podman",
     nodeUsageMode: "EXCLUSIVE", // label 이 일치하는 job 에서만 사용됨.
     idleMinutes: idleMinutes, //대기시간(대시시간동안 다른 job 실행가능).
     instanceCap: instanceCap, //최대 생성가능한 동일 스팩 팟 갯수.
     envVars: envVars,
     containers:[
-        containerTemplate(
-            name: "jdk",
-            image: selectedJdkImage,
-            command: "sleep",
-            args: "infinity"
-        ),
         containerTemplate(
             name: "podman",
             image: podmanImage,
@@ -99,15 +77,9 @@ podTemplate(
         )
     ]
 ) {
-    node("jenkins-agent-jdk${jdkVersion}-podman") {
+    node("jenkins-agent-podman") {
         stage("Checkout") {
             git(url: projectRepositoryUrl, branch: projectRepositoryBranch, credentialsId: projectRepositoryCredential)
-        }
-
-        stage("Build gradle") {
-            container("jdk") {
-                sh("./gradlew ${gradleBuildCommand}")
-            }
         }
 
         stage("Build container image") {
@@ -149,7 +121,7 @@ podTemplate(
 
         stage("Execute modify-argocd-app job") {
             build(
-                job: "kruise.managed.modify-argocd-app-and-sync",
+                job: "kruise.managed.modify-argocd-app",
                 wait: true,
                 parameters: [
                     string(name: "argocdApplicationName", value: argocdApplicationName),
@@ -160,7 +132,7 @@ podTemplate(
 
         stage("Execute sync-argocd-app job") {
             build(
-                job: "kruise.managed.modify-argocd-app-and-sync",
+                job: "kruise.managed.sync-argocd-app",
                 wait: true,
                 parameters: [
                     string(name: "argocdApplicationName", value: argocdApplicationName)
