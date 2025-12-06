@@ -1,69 +1,61 @@
 # Kruise
 
-모험을 꿈꾸시나요? Kruise 는 당신을 배포의 세계로 안내할 준비가 되어 있습니다.
-당신은 푸른 바다를 탐험하며 그 진정한 아름다움을 발견할 것입니다.
-지금, 모험가로 변신했을 때입니다. 당신의 이야기가 여기서 시작됩니다.
+Kruise 는 Kubernetes 위에서 CI/CD 파이프라인을 자동화하는 도구로, Jenkins 를 통해 Gradle 빌드와 Docker 이미지 생성/푸시를 수행하고 Argo CD 에 Helm 차트로 배포를 생성합니다.
 
+## Information
+- 빌드/배포 환경: Kubernetes
+- 빌드/배포 방법: Jenkins Job 실행
+- 빌드 방식: Gradle, Docker image build/push
+- 배포 방식: Argo CD + Helm chart
 
-루틴에서 벗어나 환상적인 여정을 떠나보세요.
-Kruise 는 색다른 경험을 선사합니다.
-당신은 푸른 바다 위를 여행하며 자유롭게 휴식을 취하고 새로운 모험을 찾을 수 있습니다.
-이제 여행의 마법에 빠져보세요.
+Jenkins Job 을 통해 프로젝트를 빌드한 뒤 Argo CD 에 Application 을 생성하고 배포까지 완료합니다.
 
-# Information
-- 빌드/배포 환경: kubernetes
-- 빌드/배포 방법: jenkins job 실행
-- 빌드 방식: gradle, docker image build/push
-- 배포 방식: argo-cd 에 helm chart 방식으로 배포
+## Prerequisites
+- Helm CLI 가 설치되어 있어야 합니다.
+- Jenkins 와 Argo CD 를 설치할 Kubernetes 클러스터에 접근 가능한 kubeconfig.
+- 컨테이너 레지스트리, 소스 저장소, Argo CD 접속용 자격 증명.
 
-jenkins job 을 통해 프로젝트 빌드후 argocd 에 application 생성 및 배포까지 진행시켜줌.
+## How to install
 
+### 1) Helm 으로 Argo CD, Jenkins 설치
+```shell
+helm repo add argo https://argoproj.github.io/argo-helm
+helm repo add jenkins https://charts.jenkins.io
+helm dependency update ./helm
+helm install argo-cd argo/argo-cd -f helm/values-argocd.yaml
+helm install jenkins jenkins/jenkins -f helm/values-jenkins.yaml
+```
 
+### 2) Jenkins 에서 `kruise.init` Job 실행
+사전 준비: Kruise 소스 저장소 접근용 Credential 생성
+- Kind: Username with password
+- GitHub Personal Access Token 사용 (repo 권한 필요)
 
-# How to install
-**step 1: helm 으로 argo-cd, jenkins 설치**
+### 3) 테스트 애플리케이션 배포용 seed Job 실행
+필요 Credential
+1. 애플리케이션 소스 저장소 접근용
+   - Kind: Username with password
+   - GitHub Personal Access Token (repo 권한)
+2. 빌드된 이미지 push 용 컨테이너 레지스트리 인증
+   - Kind: Username with password
+3. Kubernetes 배포를 위한 Argo CD 인증
+   - Kind: Username with password
+   - Argo CD Access Token 사용
 
+#### Argo CD Access Token 생성 예시
+```shell
+argocd login <ARGOCD_SERVER> --username admin --password <ADMIN_PASSWORD>
+argocd account generate-token --account kruise-admin
+```
 
+## Global setting
 
-
-**step 2: jenkins 로그인해서 'kruise.init' job 실행**
-사전준비: kruise 소스 저장소에 접근하기 위한 credential 필요.
-- credential kind: Username with password
-- kruise 소스 저장소(github)에서 Personal access tokens 을 발급받아서 사용
-- repo 그룹 접근권한 필요.
-
-
-
-**step 3: 테스트 application 배포용 seed job 실행**
-사전준비1: application 소스 저장소에 접근하기 위한 credential 필요.
-- credential kind: Username with password
-- kruise 소스 저장소(github)에서 Personal access tokens 을 발급받아서 사용
-- repo 그룹 접근권한 필요.
-
-사전준비2: 빌드된 이미지 push 할 container registry 인증용 credential 필요.
-- credential kind: Username with password
-
-사전준비3: k8s 에 deploy 를 진행하기 위해 argocd 인증용 credential 필요.
-- credential kind: Username with password
-- argocd access token 생성해서 사용.
-- argocd access token 생성방법:
-
-
-# Global setting
-
-## $KUBECONFIG
-helm chart 가 설치될 cluster config 파일을 지정하는 환경변수입니다.
-$KUBECONFIG 환경변수에 지정된 cluster 에 helm chart 가 설치되도록 할 수 있습니다.
+### $KUBECONFIG
+Helm chart 가 설치될 클러스터를 지정하는 환경 변수입니다. `helm` 명령 실행 전에 설정해 주세요.
 
 > https://helm.sh/docs/helm/helm/#helm
 
-command 실행전에 아래와 같이 $KUBECONFIG 환경변수를 설정해야 합니다.
-
 ```shell
 export KUBECONFIG={kubeconfig yaml 파일 경로}
-```
-
-아래와 같이 명령으로 확인
-```shell
 echo $KUBECONFIG
 ```
