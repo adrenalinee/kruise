@@ -48,6 +48,32 @@ argocd login <ARGOCD_SERVER> --username admin --password <ADMIN_PASSWORD>
 argocd account generate-token --account kruise-admin
 ```
 
+## `kruise.yaml` 설정
+프로젝트 저장소 루트에 `kruise.yaml`(YAML)을 추가하면 Jenkins 파라미터와 병합하여 다음 작업에 사용합니다. `projectRepositoryUrl`은 Jenkins Job 필수 파라미터이며 `kruise.yaml`에는 포함하지 않습니다.
+
+- **필수 키**: `projectName`, `projectRepositoryBranch`, `clusterName`, `imagePath`
+- **옵션 키 및 기본값**
+  - `phase`: 빈 문자열
+  - `helmChartName`: `kruise-standard-server`
+  - `helmChartValues`: Jenkins 파라미터 기본값(Helm values 문자열)
+  - `override`: `false`
+  - `proxy`, `noProxy`: 빈 문자열
+  - `projectRepositoryCredential`, `containerRegistryCredential`, `kruiseRepositoryCredential`, `kruiseRepositoryUrl`, `kruiseBranch`: Jenkins 파라미터 값 사용
+
+예시(YAML):
+```yaml
+projectName: sample-app
+projectRepositoryBranch: main
+clusterName: in-cluster
+imagePath: registry.example.com/sample-app
+phase: dev
+helmChartName: kruise-standard-server
+helmChartValues: |
+  replicaCount=2
+  ingress.enabled=true
+override: true
+```
+
 ## Global setting
 
 ### $KUBECONFIG
