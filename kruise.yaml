@@ -1,0 +1,35 @@
+replicaCount: 1
+image:
+  repository: example.com/kruise-standard-server
+  tag: "1.0.0"
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - secretName: example-tls
+      hosts:
+        - example.local
+serviceMonitor:
+  enabled: true
+  labels:
+    release: prometheus
+livenessProbe:
+  path: /
+  port: http
+readinessProbe:
+  path: /
+  port: http
+service:
+  port: 3000
+containerEnv:
+  SPRING_PROFILES_ACTIVE: dev
+filebeat:
+  enabled: true
+  logFilePath: /opt/app/logs
+  logFileName: application.log
+  outputElasticsearchHost: logging.example.com:9200
