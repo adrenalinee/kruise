@@ -47,6 +47,7 @@ final Map parameterOverrides = [
 Map mergedConfig = [:]
 Map loadedConfig = [:]
 Map overrideConfig = [:]
+boolean configFileExists = false
 
 
 def loadKruiseConfig(String baseDir) {
@@ -68,13 +69,25 @@ def loadKruiseConfig(String baseDir) {
     }
 }
 
-def validateConfig(Map config) {
-    def requiredKeys = ["projectName", "projectRepositoryUrl", "projectRepositoryBranch", "clusterName", "imagePath"]
-    requiredKeys.each { key ->
+def validateConfig(Map config, Map requirements, String contextLabel) {
+    List<String> invalidKeys = []
+
+    requirements.requiredKeys.each { key ->
         def value = config[key]
         if (value == null || (value instanceof String && value.trim() == "")) {
-            error("[kruise] ${key} 은 필수값입니다. kruise.yaml 또는 Jenkins 파라미터를 확인하세요.")
+            invalidKeys << "${key}(required)"
         }
+    }
+
+    requirements.expectedTypes.each { key, expectedType ->
+        def value = config[key]
+        if (value != null && !(value instanceof expectedType)) {
+            invalidKeys << "${key}(expected ${expectedType.simpleName})"
+        }
+    }
+
+    if (!invalidKeys.isEmpty()) {
+        error("[kruise] ${contextLabel} 설정 오류가 있습니다. 문제 키: ${invalidKeys.join(', ')}")
     }
 }
 
@@ -97,17 +110,91 @@ podTemplate(
         if (!bootstrapConfig.projectRepositoryUrl) {
             error("[kruise] projectRepositoryUrl 은 필수값입니다. Jenkins 파라미터를 확인하세요.")
         }
+        validateConfig(
+            bootstrapConfig,
+            [
+                requiredKeys: [
+                    "projectRepositoryUrl",
+                    "projectRepositoryBranch",
+                    "kruiseRepositoryUrl",
+                    "kruiseBranch",
+                    "projectRepositoryCredential",
+                    "kruiseRepositoryCredential",
+                ],
+                expectedTypes: [
+                    projectRepositoryUrl: String,
+                    projectRepositoryBranch: String,
+                    projectRepositoryCredential: String,
+                    kruiseRepositoryCredential: String,
+                    kruiseRepositoryUrl: String,
+                    kruiseBranch: String,
+                ],
+            ],
+            "bootstrap"
+        )
         stage("Checkout kruise") {
+            validateConfig(
+                bootstrapConfig,
+                [
+                    requiredKeys: [
+                        "projectRepositoryUrl",
+                        "projectRepositoryBranch",
+                        "kruiseRepositoryUrl",
+                        "kruiseBranch",
+                        "projectRepositoryCredential",
+                        "kruiseRepositoryCredential",
+                    ],
+                    expectedTypes: [
+                        projectRepositoryUrl: String,
+                        projectRepositoryBranch: String,
+                        projectRepositoryCredential: String,
+                        kruiseRepositoryCredential: String,
+                        kruiseRepositoryUrl: String,
+                        kruiseBranch: String,
+                    ],
+                ],
+                "Checkout kruise"
+            )
             git(url: bootstrapConfig.kruiseRepositoryUrl, branch: bootstrapConfig.kruiseBranch, credentialsId: bootstrapConfig.kruiseRepositoryCredential)
         }
         stage("Checkout project") {
             dir('project') {
                 git(url: bootstrapConfig.projectRepositoryUrl, branch: bootstrapConfig.projectRepositoryBranch, credentialsId: bootstrapConfig.projectRepositoryCredential)
                 loadedConfig = loadKruiseConfig('.')
+                configFileExists = !loadedConfig.isEmpty()
             }
-            mergedConfig = configDefaults + loadedConfig + overrideConfig
+            if (configFileExists) {
+                mergedConfig = configDefaults + loadedConfig + overrideConfig
+            } else {
+                mergedConfig = configDefaults + overrideConfig
+            }
             mergedConfig.projectRepositoryUrl = bootstrapConfig.projectRepositoryUrl
-            validateConfig(mergedConfig)
+            validateConfig(
+                mergedConfig,
+                [
+                    requiredKeys: [
+                        "projectName",
+                        "projectRepositoryUrl",
+                        "projectRepositoryBranch",
+                        "clusterName",
+                        "imagePath",
+                    ],
+                    expectedTypes: [
+                        projectName: String,
+                        projectRepositoryUrl: String,
+                        projectRepositoryBranch: String,
+                        clusterName: String,
+                        imagePath: String,
+                        helmChartName: String,
+                        helmChartValues: Object,
+                        phase: String,
+                        override: Boolean,
+                        proxy: String,
+                        noProxy: String,
+                    ],
+                ],
+                configFileExists ? "kruise.yaml" : "Jenkins 파라미터"
+            )
 
             if (mergedConfig.projectName == "kruise") {
                 error("[kruise] 허용되지 않는 projectName 입니다. projectName: ${mergedConfig.projectName}")
@@ -116,9 +203,61 @@ podTemplate(
             println("[kruise] merged configuration: ${mergedConfig}")
         }
         stage('Run seedJobDsl') {
+            validateConfig(
+                mergedConfig,
+                [
+                    requiredKeys: [
+                        "projectName",
+                        "projectRepositoryUrl",
+                        "projectRepositoryBranch",
+                        "clusterName",
+                        "imagePath",
+                    ],
+                    expectedTypes: [
+                        projectName: String,
+                        projectRepositoryUrl: String,
+                        projectRepositoryBranch: String,
+                        clusterName: String,
+                        imagePath: String,
+                        helmChartName: String,
+                        helmChartValues: Object,
+                        phase: String,
+                        override: Boolean,
+                        proxy: String,
+                        noProxy: String,
+                    ],
+                ],
+                'Run seedJobDsl'
+            )
             jobDsl(sandbox: true, targets: 'seedJobs/plain/**_JobDsl.groovy', additionalParameters: mergedConfig)
         }
         stage("createArgocdApp") {
+            validateConfig(
+                mergedConfig,
+                [
+                    requiredKeys: [
+                        "projectName",
+                        "projectRepositoryUrl",
+                        "projectRepositoryBranch",
+                        "clusterName",
+                        "imagePath",
+                    ],
+                    expectedTypes: [
+                        projectName: String,
+                        projectRepositoryUrl: String,
+                        projectRepositoryBranch: String,
+                        clusterName: String,
+                        imagePath: String,
+                        helmChartName: String,
+                        helmChartValues: Object,
+                        phase: String,
+                        override: Boolean,
+                        proxy: String,
+                        noProxy: String,
+                    ],
+                ],
+                'createArgocdApp'
+            )
             final String fixedBranchName = mergedConfig.projectRepositoryBranch.replace("/", "-").toLowerCase()
             final String fixedPhase = mergedConfig.phase == "" ? "" : "-${mergedConfig.phase}"
             final def releaseName = "${mergedConfig.projectName}${fixedPhase}"
