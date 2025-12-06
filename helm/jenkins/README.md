@@ -40,7 +40,8 @@ kruise 소스를 다운 받을 계정의 token 을 credentials 로 생성해서 
  
 # kruise jobs
 ## `kruise.action.create-project-plain`
+- `projectRepositoryUrl` param: 프로젝트 git 주소.
 - `projectRepositoryCredential` param: 프로젝트 git 인증용 크레덴셜. github access token.
 - `containerRegistryCredential` param: container image 를 push 하기 위한 크레덴셜. kic access token.
-- `argocdCredential` param: argocd login 용 token.
+- `override` param: 이미 존재하는 Argo CD Application 덮어쓰기 여부.
 

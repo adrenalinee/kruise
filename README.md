@@ -49,16 +49,16 @@ argocd account generate-token --account kruise-admin
 ```
 
 ## `kruise.yaml` 설정
-프로젝트 저장소 루트에 `kruise.yaml`(YAML)을 추가하면 Jenkins 파라미터와 병합하여 다음 작업에 사용합니다. `projectRepositoryUrl`은 Jenkins Job 필수 파라미터이며 `kruise.yaml`에는 포함하지 않습니다.
+프로젝트 저장소 루트에 `kruise.yaml`(YAML)을 추가하면 Jenkins 파라미터와 병합하여 다음 작업에 사용합니다. Jenkins Job에서는 저장소 URL과 크레덴셜 정도만 입력하고, 나머지 필드는 `kruise.yaml` 또는 기본값을 사용합니다. `projectRepositoryUrl`은 Jenkins Job 필수 파라미터이며 `kruise.yaml`에는 포함하지 않습니다.
 
 - **필수 키**: `projectName`, `projectRepositoryBranch`, `clusterName`, `imagePath`
 - **옵션 키 및 기본값**
   - `phase`: 빈 문자열
   - `helmChartName`: `kruise-standard-server`
-  - `helmChartValues`: Jenkins 파라미터 기본값(Helm values 문자열)
+  - `helmChartValues`: Jenkins 기본값(Helm values 문자열)
   - `override`: `false`
   - `proxy`, `noProxy`: 빈 문자열
-  - `projectRepositoryCredential`, `containerRegistryCredential`, `kruiseRepositoryCredential`, `kruiseRepositoryUrl`, `kruiseBranch`: Jenkins 파라미터 값 사용
+  - `kruiseRepositoryUrl`, `kruiseBranch`: Jenkins 파라미터 기본값 사용 가능
 
 예시(YAML):
 ```yaml

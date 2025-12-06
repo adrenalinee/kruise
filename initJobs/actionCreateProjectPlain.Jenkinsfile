@@ -16,18 +16,27 @@ readinessProbe.path=/
 service.port=3000
 """
 
-final Map defaultConfig = [
-    projectName: params.projectName?.trim(),
+final Map configDefaults = [
+    projectRepositoryBranch: "develop",
+    phase: "",
+    helmChartName: "kruise-standard-server",
+    helmChartValues: defaultHelmChartValues,
+    override: false,
+    proxy: "",
+    noProxy: "",
+]
+
+final Map parameterOverrides = [
     projectRepositoryUrl: params.projectRepositoryUrl?.trim(),
-    projectRepositoryBranch: params.projectRepositoryBranch ?: "develop",
+    projectRepositoryBranch: params.projectRepositoryBranch?.trim(),
     clusterName: params.clusterName?.trim(),
-    phase: params.phase ?: "",
+    phase: params.phase?.trim(),
     imagePath: params.imagePath?.trim(),
-    helmChartName: params.helmChartName ?: "kruise-standard-server",
-    helmChartValues: params.helmChartValues ?: defaultHelmChartValues,
+    helmChartName: params.helmChartName?.trim(),
+    helmChartValues: params.helmChartValues,
     override: params.override,
-    proxy: params.proxy ?: "",
-    noProxy: params.noProxy ?: "",
+    proxy: params.proxy?.trim(),
+    noProxy: params.noProxy?.trim(),
     projectRepositoryCredential: params.projectRepositoryCredential,
     containerRegistryCredential: params.containerRegistryCredential,
     kruiseRepositoryCredential: params.kruiseRepositoryCredential,
@@ -37,6 +46,7 @@ final Map defaultConfig = [
 
 Map mergedConfig = [:]
 Map loadedConfig = [:]
+Map overrideConfig = [:]
 
 
 def loadKruiseConfig(String baseDir) {
@@ -70,6 +80,10 @@ def validateConfig(Map config) {
 
 println("[kruise] job parameters: ${params}")
 
+overrideConfig = parameterOverrides.findAll { entry ->
+    entry.value != null && (!(entry.value instanceof String) || entry.value.trim() != "")
+}
+
 podTemplate(
     inheritFrom: 'jenkins-agent-default',
     name: "jenkins-agent-default",
@@ -79,16 +93,20 @@ podTemplate(
     instanceCap: instanceCap, //최대 생성가능한 동일 스팩 팟 갯수.
 ) {
     node("jenkins-agent-default") {
+        final Map bootstrapConfig = configDefaults + overrideConfig
+        if (!bootstrapConfig.projectRepositoryUrl) {
+            error("[kruise] projectRepositoryUrl 은 필수값입니다. Jenkins 파라미터를 확인하세요.")
+        }
         stage("Checkout kruise") {
-            git(url: defaultConfig.kruiseRepositoryUrl, branch: defaultConfig.kruiseBranch, credentialsId: defaultConfig.kruiseRepositoryCredential)
+            git(url: bootstrapConfig.kruiseRepositoryUrl, branch: bootstrapConfig.kruiseBranch, credentialsId: bootstrapConfig.kruiseRepositoryCredential)
         }
         stage("Checkout project") {
             dir('project') {
-                git(url: defaultConfig.projectRepositoryUrl, branch: defaultConfig.projectRepositoryBranch, credentialsId: defaultConfig.projectRepositoryCredential)
+                git(url: bootstrapConfig.projectRepositoryUrl, branch: bootstrapConfig.projectRepositoryBranch, credentialsId: bootstrapConfig.projectRepositoryCredential)
                 loadedConfig = loadKruiseConfig('.')
             }
-            mergedConfig = defaultConfig + loadedConfig
-            mergedConfig.projectRepositoryUrl = defaultConfig.projectRepositoryUrl
+            mergedConfig = configDefaults + loadedConfig + overrideConfig
+            mergedConfig.projectRepositoryUrl = bootstrapConfig.projectRepositoryUrl
             validateConfig(mergedConfig)
 
             if (mergedConfig.projectName == "kruise") {
@@ -98,7 +116,7 @@ podTemplate(
             println("[kruise] merged configuration: ${mergedConfig}")
         }
         stage('Run seedJobDsl') {
-            jobDsl(sandbox: true, targets: 'seedJobs/plain/**_JobDsl.groovy')
+            jobDsl(sandbox: true, targets: 'seedJobs/plain/**_JobDsl.groovy', additionalParameters: mergedConfig)
         }
         stage("createArgocdApp") {
             final String fixedBranchName = mergedConfig.projectRepositoryBranch.replace("/", "-").toLowerCase()
