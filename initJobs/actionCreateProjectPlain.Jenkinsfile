@@ -1,22 +1,56 @@
 final Integer idleMinutes = 480 //8시간
 final Integer instanceCap = 5
 
+final Map config = [
+    projectRepositoryBranch      : "develop",
+    clusterName                  : "in-cluster",
+    phase                        : "",
+    imagePath                    : "",
+    helmChartName                : "kruise-standard-server",
+    helmChartValues              : """replicaCount=1
+ingress.enabled=true
+ingress.className=nginx
+ingress.hosts[0].host=
+ingress.hosts[0].paths[0].path=/
+ingress.hosts[0].paths[0].pathType=ImplementationSpecific
+ingress.tls[0].secretName=
+ingress.tls[0].hosts[0]=
+serviceMonitor.enabled=true
+serviceMonitor.labels.release=prometheus
+livenessProbe.path=/
+readinessProbe.path=/
+service.port=3000
+""",
+    override                     : false,
+    proxy                        : "",
+    noProxy                      : "",
+    projectRepositoryCredential  : "",
+    containerRegistryCredential  : "",
+    kruiseRepositoryCredential   : "",
+    kruiseRepositoryUrl          : "https://github.com/adrenalinee/kruise.git",
+    kruiseBranch                 : "main",
+]
+
 final String projectName = params.projectName
 final String projectRepositoryUrl = params.projectRepositoryUrl
-final String projectRepositoryBranch = params.projectRepositoryBranch
+final String projectRepositoryBranch = useOrDefault(params.projectRepositoryBranch, config.projectRepositoryBranch)
 
-final String helmChartName = params.helmChartName
-final helmChartValues = params.helmChartValues
-final String imagePath = params.imagePath
+final String helmChartName = config.helmChartName
+final helmChartValues = params.helmChartValues?.trim() ? params.helmChartValues : config.helmChartValues
+final String imagePath = useOrDefault(params.imagePath, config.imagePath)
 
-final String clusterName = params.clusterName
-final String phase = params.phase
-final def override = params.override
+final String clusterName = useOrDefault(params.clusterName, config.clusterName)
+final String phase = useOrDefault(params.phase, config.phase)
+final def override = params.override != null ? params.override : config.override
+final String proxy = config.proxy
+final String noProxy = config.noProxy
 
 //아래 변수는 build job 생성용 DSL 에서 사용한다.(jenkins job 으로는 넘기지 않음)---
-final def kruiseRepositoryCredential = params.kruiseRepositoryCredential
-final String kruiseRepositoryUrl = params.kruiseRepositoryUrl
-final String kruiseBranch = params.kruiseBranch
+final def projectRepositoryCredential = useOrDefault(params.projectRepositoryCredential, config.projectRepositoryCredential)
+final def containerRegistryCredential = useOrDefault(params.containerRegistryCredential, config.containerRegistryCredential)
+final def kruiseRepositoryCredential = useOrDefault(params.kruiseRepositoryCredential, config.kruiseRepositoryCredential)
+final String kruiseRepositoryUrl = useOrDefault(params.kruiseRepositoryUrl, config.kruiseRepositoryUrl)
+final String kruiseBranch = useOrDefault(params.kruiseBranch, config.kruiseBranch)
 //------
 
 final String fixedBranchName = projectRepositoryBranch.replace("/", "-").toLowerCase()
@@ -83,4 +117,12 @@ podTemplate(
             )
         }
     }
+}
+
+String useOrDefault(String value, String defaultValue) {
+    if (value == null) {
+        return defaultValue
+    }
+
+    return value.trim() == "" ? defaultValue : value.trim()
 }

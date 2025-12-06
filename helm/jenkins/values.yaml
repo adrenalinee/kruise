@@ -110,7 +110,13 @@ controller:
                     git(url: kruiseRepositoryUrl, branch: kruiseBranch, credentialsId: kruiseRepositoryCredential)
                   }
                   stage('Run jobDsl') {
-                    jobDsl(sandbox: true, targets: 'initJobs/**_JobDsl.groovy')
+                    jobDsl(
+                      sandbox: true,
+                      targets: 'initJobs/**_JobDsl.groovy',
+                      removedJobAction: 'DELETE',
+                      removedViewAction: 'DELETE',
+                      lookupStrategy: 'SEED_JOB'
+                    )
                   }
                 }
               }"""
